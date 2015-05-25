@@ -1,5 +1,10 @@
-## Smartcar
+# Smartcar #
+SJTU
 
-# Hierachy:
+## Usage: ##
+TO see the data from the remote car:
+`cd data_collector/`
+`./run.sh`
 
-data_collector: the api to receive data from remote car
+## File Hierachy: ##
+data_collector/: the api to receive data from remote car
