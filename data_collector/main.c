@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     char    buff[4096];
     int 	port;
     int     n;
-   int cnt=0; 
+    int cnt=0; 
     if(argc == 1)
     {
     	printf("usage : %s port\n",argv[0]);
@@ -51,20 +51,25 @@ int main(int argc, char** argv)
     }
 
     printf("======waiting for client's request======\n");    
-    
+    /**********************/
+    exit(0);
+    /**********************/
     if( (connfd = accept(listenfd, (struct sockaddr*)NULL, NULL)) == -1){
         printf("accept socket error: %s(errno: %d)",strerror(errno),errno);
         exit(0);
     }
-     printf("OK\n");
+    printf("OK\n");
+    
     while(1){
 
-    n = recv(connfd, &cf, sizeof(cf), 0);
-    if(n!= sizeof(cf))
-    	printf("warning : incomplete frame received.\n");
+      n = recv(connfd, &cf, sizeof(cf), 0);
+      if(n!= sizeof(cf))
+      printf("warning : incomplete frame received.\n");
     	
-    sprint_long_canframe(buff, &cf, 0);
-  	printf("Received:%s  cnt:%d\n",buff,cnt++);
+      sprint_long_canframe(buff, &cf, 0);
+      //memset(buff,0,sizeof(buff));
+      printf("Received:%s  cnt:%d\n",buff,cnt++);
+      
     
     }
     close(connfd);
