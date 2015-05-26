@@ -1,4 +1,4 @@
-asdfcxvznbfgvewuatfhraoisfjcxb,k# Smartcar #
+# Smartcar #
 SJTU
 
 ## Usage ##
