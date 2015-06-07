@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="SmartBattery">
+<head>
+    <meta charset="UTF-8">
+    <title>Maps Basic</title>
+
+    <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+</head>
+<body>
+    <div id="maps" ng-controller="VehicleMapsController" ng-cloak>
+        <div id="map-canvas" class="google-map-canvas">
+            <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
+                <ui-gmap-markers models="map_markers" coords="'self'" idkey="'vehicle_id'">
+                    <ui-gmap-windows show="'show'">
+                        <div ng-non-bindable style="width: 200px">
+                            <div>
+                                <strong>
+                                    {{ title }}
+                                </strong>
+                            </div>
+                            <div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                        style="width: {{data.state_of_charge * 100 + '%'}}"
+                                        >
+                                        {{ (data.state_of_charge * 100).toFixed(2) + '%' }}
+                                        Charge
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ui-gmap-windows>
+                </ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
+        <div><input type="text" ng-model="map_options.center.latitude"></div>
+        <div><input type="text" ng-model="map_options.center.longitude"></div>
+        <div><input type="number" ng-model="map_options.zoom"></div>
+    </div>
+
+    <div id="script-block">
+        <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+
+        <script language="javascript" type="text/javascript" src="js/main.js"></script>
+    </div>
+</body>
+</html>
