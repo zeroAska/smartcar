@@ -19,7 +19,7 @@ angular.module('SmartBattery')
     vehicle_status_url: 'vehicle_status.json',
     vehicle_status_interval: 1000.0
 })
-.controller('VehicleMapsController', function($scope, $interval, $http, VehicleMapsController$Options) {
+.controller('VehicleMapsController', function($scope, $interval, $http, $compile, VehicleMapsController$Options) {
     var dummy_vehc = {latitude: 31.0232217, longitude: 121.4079586 };
     $scope.map_options = {center: dummy_vehc, zoom: 13 };
     $scope.map_markers = [];
@@ -39,22 +39,45 @@ angular.module('SmartBattery')
                     longitude: veh.longitude + Math.random() * 0.001,
                     latitude: veh.latitude + Math.random() * 0.001,
                     title: 'Vehicle ' + String(veh.vehicle_id),
-                    data: veh
+                    data: veh,
+                    charts: {},
+                    icon: 'imgs/car-icon.svg',
                 };
+                new_set.data.title = new_set.title;
+                new_set.charts.labels = ["January", "February", "March", "April", "May", "June", "July"];
+                new_set.charts.series = ['SOC', 'Health'];
+                new_set.charts.data = [
+                    [65, 59, 80, 81, 56, 55, 40],
+                    [28, 48, 40, 19, 86, 27, 90]
+                ];
                 new_set.data.state_of_charge += Math.random() * 0.1;
                 if (!$scope.map_marker_dict[veh.vehicle_id]) {
                     $scope.map_marker_dict[veh.vehicle_id] = new_set;
                     $scope.map_markers.push(new_set);
-                    new_set.track = function() {
-                        $scope.map_options.center = new_set;
-                    }
+                    new_set.show = false;
+                    new_set.options = {};
                 } else {
                     _.extend($scope.map_marker_dict[veh.vehicle_id], new_set);
                 }
+                var elem = angular.element('#marker-label').children().clone();
+                var new_scope = $scope.$new();
+                new_scope.vec = new_set;
+                $scope.map_marker_dict[veh.vehicle_id].options.labelContent = $compile(elem)(new_scope).html();
             });
         })
         .catch(function(e) {
             console.error('Status Update Failure: ' + String(e));
         });
     }, VehicleMapsController$Options.vehicle_status_interval);
+
+    window.track_vehicle = function(vehicle_id) {
+        $scope.$apply(function() {
+            $scope.map_options.center = $scope.map_marker_dict[vehicle_id];
+        });
+    }
+
+
+})
+.controller('VehicleMapsController#WindowController', function($scope) {
+    console.log($scope);
 });

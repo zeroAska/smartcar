@@ -9,32 +9,59 @@
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
 </head>
 <body>
-    <div id="maps" ng-controller="VehicleMapsController" ng-cloak>
-        <div id="map-canvas" class="google-map-canvas">
-            <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
-                <ui-gmap-markers models="map_markers" coords="'self'" idkey="'vehicle_id'">
+    <div id="maps" ng-controller="VehicleMapsController" ng-cloak class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="map-canvas" class="google-map-canvas">
+                    <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
+                    <ui-gmap-markers models="map_markers" coords="'self'" idkey="'vehicle_id'" icon="'icon'" options="'options'">
                     <ui-gmap-windows show="'show'">
-                        <div ng-non-bindable style="width: 200px">
-                            <div>
-                                <strong>
-                                    {{ title }}
-                                </strong>
-                            </div>
-                            <div>
+                    <div ng-non-bindable>
+                        {{ title }}
+                    </div>
+                    </ui-gmap-windows>
+                    </ui-gmap-marker>
+                    </ui-gmap-google-map>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default" id="vehicle-list">
+                    <div class="panel-heading">
+                        Vehicles
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel panel-primary" ng-repeat="vec in map_markers" ng-if="vec.show">
+                            <div class="panel-heading">{{ vec.title }}</div>
+                            <div class="panel-body">
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" 
-                                        style="width: {{data.state_of_charge * 100 + '%'}}"
+                                        style="width: {{vec.data.state_of_charge * 100 + '%'}}"
                                         >
-                                        {{ (data.state_of_charge * 100).toFixed(2) + '%' }}
+                                        {{ (vec.data.state_of_charge * 100).toFixed(2) + '%' }}
                                         Charge
                                     </div>
                                 </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" 
+                                        style="width: {{vec.data.state_of_health * 100 + '%'}}"
+                                        >
+                                        {{ (vec.data.state_of_health * 100).toFixed(2) + '%' }}
+                                        Health
+                                    </div>
+                                </div>
+                                <div>
+                                    <canvas class="lines chart chart-line" data="vec.charts.data" labels="vec.charts.labels"
+                                    legend="true" series="vec.charts.series"
+                                    options="{scaleLabel: '<%=value%>%'}"
+                                    ></canvas>
+                                </div>
                             </div>
                         </div>
-                    </ui-gmap-windows>
-                </ui-gmap-marker>
-            </ui-gmap-google-map>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div><input type="text" ng-model="map_options.center.latitude"></div>
         <div><input type="text" ng-model="map_options.center.longitude"></div>
         <div><input type="number" ng-model="map_options.zoom"></div>
@@ -50,6 +77,15 @@
         <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
 
         <script language="javascript" type="text/javascript" src="js/main.js"></script>
+    </div>
+    <div style="display: none" id="angular-templates" ng-non-bindable>
+        <div id="marker-label">
+            <div>
+                <div class="progress" style="width: 100px">
+                    <div class="progress-bar" style="width: {{vec.data.state_of_health * 100}}%"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
