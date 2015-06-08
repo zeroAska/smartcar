@@ -55,7 +55,7 @@
     <div style="display: none" id="angular-templates" ng-non-bindable>
         <div id="marker-label">
             <div>
-                <div style="width: 70px">
+                <div style="width: 70px" ng-if="vec !== active_marker" class="ani-fade">
                     <div style="position: relative">
                         <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
                         <div class="progress" style="width: 40px; height: 10px; margin-bottom: 1px;">
