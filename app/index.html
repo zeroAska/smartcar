@@ -7,19 +7,44 @@
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
     <link rel="stylesheet" href="css/main.css" type="text/css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../bower_components/angular/angular-csp.css" type="text/css">
 </head>
 <body>
     <div id="maps" ng-controller="VehicleMapsController" ng-cloak>
-                <div id="map-canvas" class="google-map-canvas">
-                    <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
-                    </ui-gmap-google-map>
+        <div id="map-canvas" class="google-map-canvas">
+            <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
+            </ui-gmap-google-map>
+        </div>
+
+        <div id="vehicle-graphs" ng-if="active_marker" class="ani-fade">
+            <div class="vehicle-graph">
+                <div>
+                    <canvas class="lines chart chart-line" data="active_marker.charts.data" labels="active_marker.charts.labels"
+                    legend="true" series="active_marker.charts.series"
+                    height="185" width="500" options="{scaleLabel: '<%=value%>%', scaleBeginAtZero: true}"
+                    ></canvas>
                 </div>
+            </div>
+            <div class="vehicle-graph">
+                <div>
+                    <canvas class="lines chart chart-line" data="active_marker.charts.data" labels="active_marker.charts.labels"
+                    legend="true" series="active_marker.charts.series"
+                    height="185" width="500" options="{scaleLabel: '<%=value%>%', scaleBeginAtZero: true}"
+                    ></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="not-ready" ng-if="!ready" class="ani-fade">
+            <div class="text">Loading Maps ...</div>
+        </div>
     </div>
 
     <div id="script-block">
         <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.min.js"></script>
