@@ -21,18 +21,38 @@ angular.module('SmartBattery')
     progress_breaks: [0.2, 0.8],
     default_icon: {
         url: 'imgs/car-icon.svg',
-        size: {width: 35, height: 35},
+        size: {width: 36, height: 36},
         origin: {x: 0, y: 0},
-        anchor: {x: 35/2, y: 35/2}
+        anchor: {x: 36/2, y: 36/2}
     },
     active_icon: {
         url: 'imgs/car-icon-active.svg',
-        size: {width: 35, height: 35},
+        size: {width: 48, height: 48},
         origin: {x: 0, y: 0},
-        anchor: {x: 35/2, y: 35/2}
+        anchor: {x: 48/2, y: 48/2}
     }
 })
-.controller('VehicleMapsController', function($log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady) {
+.factory('VMC$Tools', function($log, $compile) {
+    return {
+        compile_and_link: function(template, scope) {
+            var template_element;
+            if (typeof template == 'string') {
+                if (template[0] === '#') {
+                    template_element = angular.element(template).children().clone();
+                } else {
+                    template_element = angular.element(template);
+                }
+            } else {
+                template_element = template.clone();
+            }
+
+            var link_func = $compile(template_element);
+            link_func(scope);
+            return template_element;
+        }
+    };
+})
+.controller('VehicleMapsController', function($log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady, VMC$Tools) {
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 15 };
     $scope.map_markers = [];
@@ -83,13 +103,12 @@ angular.module('SmartBattery')
                     });
                     $scope.gmap_markers.push(marker);
                     $scope.gmap_marker_dict[new_set.vehicle_id] = marker;
-                    var elem = angular.element('#marker-label').children().clone();
                     // XXX Register and wait for scope $destroy when marker
                     // goes out of range
                     var new_scope = $scope.$new();
                     new_scope.vec = new_set;
                     new_scope.progress_breaks = VehicleMapsController$Options.progress_breaks;
-                    $compile(elem)(new_scope);
+                    var elem = VMC$Tools.compile_and_link('#marker-label', new_scope);
                     // XXX keep in mind that MarkerWithLabel with labelContent
                     // being a DOM element does not work by default. A patch
                     // is needed
@@ -104,7 +123,7 @@ angular.module('SmartBattery')
                         });
                     });
                     new_scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
-                        $scope.gmap_marker_dict[veh.vehicle_id].setPosition(new google.maps.LatLng(coords[0], coords[1]));
+                        marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
                     });
                     $scope.$watch('active_marker', function(amarker) {
                         if (amarker === new_set) {
