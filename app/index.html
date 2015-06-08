@@ -77,15 +77,15 @@
                     <strong>{{ active_marker.title }}</strong>
                     <dl>
                         <dt>Model</dt>
-                        <dd>*</dd>
+                        <dd>N/A</dd>
                         <dt>Bat Type/#</dt>
-                        <dd>*</dd>
+                        <dd>N/A</dd>
                         <dt>SOC</dt>
                         <dd>{{ (active_marker.data.state_of_charge * 100).toFixed(2) }}%</dd>
                         <dt>SOH</dt>
                         <dd>{{ (active_marker.data.state_of_health * 100).toFixed(2) }}%</dd>
                         <dt>Driving Behavior</dt>
-                        <dd>*</dd>
+                        <dd>N/A</dd>
                         <dt>Coords</dt>
                         <dd>{{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}</dd>
                     </dl>

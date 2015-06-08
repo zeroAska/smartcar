@@ -213,6 +213,12 @@ angular.module('SmartBattery')
                 $scope.vehicle_info_window.close();
             }
         });
+
+        google.maps.event.addListener($scope.vehicle_info_window, 'closeclick', function() {
+            $scope.$apply(function() {
+                $scope.active_marker = null;
+            });
+        });
     });
 })
 .directive('coloredProgress', function() {
