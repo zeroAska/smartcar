@@ -49,6 +49,54 @@ angular.module('SmartBattery')
             var link_func = $compile(template_element);
             link_func(scope);
             return template_element;
+        },
+        MarkSlider: function(marker, step_time) {
+            var timer = null;
+            var source_coord = null;
+            var dest_coord = null;
+            var animation_counter = 0;
+            var final_counter = -1;
+            if (!step_time) {
+                step_time = 10;  // 24fps
+            }
+
+            function cancel() {
+                if (timer) {
+                    clearInterval(timer);
+                }
+                timer = null;
+                source_coord = null;
+                dest_coord = null;
+                animation_counter = 0;
+                final_counter = -1;
+            }
+
+            function start() {
+                timer = setInterval(animation_step, step_time);
+            }
+            function animation_step() {
+                if (animation_counter < final_counter) {
+                    var interp_coord = {
+                        lat: source_coord.lat + (dest_coord.lat - source_coord.lat) * (animation_counter + 1) / final_counter,
+                        lng: source_coord.lng + (dest_coord.lng - source_coord.lng) * (animation_counter + 1) / final_counter
+                    };
+                    marker.setPosition((interp_coord));
+                }
+                animation_counter ++;
+                if (animation_counter >= final_counter) {
+                    marker.setPosition(dest_coord);
+                    cancel();
+                }
+            }
+            this.cancel = cancel;
+            this.moveTo = function(coords, animation_time) {
+                cancel();
+                source_coord = marker.getPosition();
+                source_coord = { lat: source_coord.lat(), lng: source_coord.lng() };
+                dest_coord = {lat: coords.lat(), lng: coords.lng()};
+                final_counter = Math.ceil(animation_time / step_time);
+                start();
+            }
         }
     };
 })
@@ -122,8 +170,10 @@ angular.module('SmartBattery')
                             }
                         });
                     });
+                    var slider = new VMC$Tools.MarkSlider(marker);
                     new_scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
-                        marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
+                        // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
+                        slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
                     });
                     $scope.$watch('active_marker', function(amarker) {
                         if (amarker === new_set) {
