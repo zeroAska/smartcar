@@ -19,6 +19,18 @@ angular.module('SmartBattery')
     vehicle_status_url: 'vehicle_status.json',
     vehicle_status_interval: 1000.0,
     progress_breaks: [0.2, 0.8],
+    default_icon: {
+        url: 'imgs/car-icon.svg',
+        size: {width: 35, height: 35},
+        origin: {x: 0, y: 0},
+        anchor: {x: 35/2, y: 35/2}
+    },
+    active_icon: {
+        url: 'imgs/car-icon-active.svg',
+        size: {width: 35, height: 35},
+        origin: {x: 0, y: 0},
+        anchor: {x: 35/2, y: 35/2}
+    }
 })
 .controller('VehicleMapsController', function($log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady) {
     var dummy_vehc = {latitude: 31.0232217, longitude: 121.4079586 };
@@ -28,6 +40,7 @@ angular.module('SmartBattery')
     $scope.gmap_markers = [];
     $scope.gmap_marker_dict = {};
     $scope.gmap = null;
+    $scope.active_marker = null;
 
     function update_vehicle_status() {
         $http.get(VehicleMapsController$Options.vehicle_status_url)
@@ -45,7 +58,6 @@ angular.module('SmartBattery')
                     title: 'Vehicle ' + String(veh.vehicle_id),
                     data: veh,
                     charts: {},
-                    icon: 'imgs/car-icon.svg',
                 };
                 new_set.data.title = new_set.title;
                 new_set.charts.labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -64,12 +76,7 @@ angular.module('SmartBattery')
                     var marker = new MarkerWithLabel({
                         position: new google.maps.LatLng(new_set.latitude, new_set.longitude),
                         map: $scope.gmap.map,
-                        icon: {
-                            url: 'imgs/car-icon.svg',
-                            size: new google.maps.Size(35, 35),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(35/2, 35/2)
-                        },
+                        icon: VehicleMapsController$Options.default_icon,
                         title: 'test',
                         labelAnchor: new google.maps.Point(20, 40)
                     });
@@ -81,9 +88,27 @@ angular.module('SmartBattery')
                     new_scope.progress_breaks = VehicleMapsController$Options.progress_breaks;
                     $compile(elem)(new_scope);
                     marker.set('labelContent', elem[0]);
+                    google.maps.event.addListener(marker, 'click', function() {
+                        $scope.$apply(function() {
+                            if ($scope.active_marker == marker) {
+                                $scope.active_marker = null;
+                            } else {
+                                $scope.active_marker = marker;
+                            }
+                        });
+                    });
+                    new_scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
+                        $scope.gmap_marker_dict[veh.vehicle_id].setPosition(new google.maps.LatLng(coords[0], coords[1]));
+                    });
+                    $scope.$watch('active_marker', function(amarker) {
+                        if (marker === amarker) {
+                            marker.setIcon(VehicleMapsController$Options.active_icon);
+                        } else {
+                            marker.setIcon(VehicleMapsController$Options.default_icon);
+                        }
+                    });
                 } else {
                     _.extend($scope.map_marker_dict[veh.vehicle_id], new_set);
-                    $scope.gmap_marker_dict[veh.vehicle_id].setPosition(new google.maps.LatLng(new_set.latitude, new_set.longitude));
                 }
             });
         })
