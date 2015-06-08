@@ -111,6 +111,7 @@ angular.module('SmartBattery')
     $scope.active_marker = null;
     $scope.ready = false;
 
+
     function update_vehicle_status() {
         $http.get(VehicleMapsController$Options.vehicle_status_url)
         .then(function(resp) {
@@ -198,6 +199,20 @@ angular.module('SmartBattery')
         update_vehicle_status();
         $scope.ready = true;
         $log.log($scope.gmap);
+
+        $scope.vehicle_info_window = new google.maps.InfoWindow();
+        var te = VMC$Tools.compile_and_link('#vehicle-info-window', $scope);
+        $log.log(te);
+        $scope.vehicle_info_window.setContent(te[0]);
+
+        $scope.$watch('active_marker', function(active_marker) {
+            if (active_marker) {
+                // $scope.vehicle_info_window.open($scope.gmap_marker_dict[active_marker.vehicle_id]);
+                $scope.vehicle_info_window.open($scope.gmap.map, $scope.gmap_marker_dict[active_marker.vehicle_id]);
+            } else {
+                $scope.vehicle_info_window.close();
+            }
+        });
     });
 })
 .directive('coloredProgress', function() {
@@ -209,6 +224,12 @@ angular.module('SmartBattery')
             value: '=value',
             progress_breaks: '=progressbreaks',
         }
+    };
+})
+.filter('latlngcoords', function() {
+    return function(input) {
+        return Math.floor(input) + '\u00b0 ' + Math.floor((input % 1) * 60) + "' " +
+            ((((input % 1) * 60) % 1) * 60).toFixed(2) + "''";
     };
 })
 ;
