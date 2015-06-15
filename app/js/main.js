@@ -100,7 +100,7 @@ angular.module('SmartBattery')
         }
     };
 })
-.controller('VehicleMapsController', function($log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady, VMC$Tools) {
+.controller('VehicleMapsController', function($q, $log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady, VMC$Tools) {
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 15 };
     $scope.map_markers = [];
@@ -111,20 +111,19 @@ angular.module('SmartBattery')
     $scope.active_marker = null;
     $scope.ready = false;
 
-
-    function update_vehicle_status() {
-        $http.get(VehicleMapsController$Options.vehicle_status_url)
-        .then(function(resp) {
-            if (resp.data.type != 'vehicle_status') {
+    function handle_vehicle_update(data) {
+        $log.log(data);
+        $q(function(resolve) {
+            if (data.type != 'vehicle_status') {
                 throw new Error('Invalid data type received');
             }
 
-            var dataset = resp.data.vehicles;
+            var dataset = data.vehicles;
             _.forEach(dataset, function(veh) {
                 var new_set = {
                     vehicle_id: parseInt(veh.vehicle_id),
-                    longitude: veh.longitude + Math.random() * 0.001,
-                    latitude: veh.latitude + Math.random() * 0.001,
+                    longitude: veh.longitude,
+                    latitude: veh.latitude,
                     title: 'Vehicle ' + String(veh.vehicle_id),
                     data: veh,
                     charts: {},
@@ -136,7 +135,6 @@ angular.module('SmartBattery')
                     [65, 59, 80, 81, 56, 55, 40],
                     [28, 48 * Math.random(), 40, 19, 86, 27, 90]
                 ];
-                new_set.data.state_of_charge = Math.random();
                 if (!$scope.map_marker_dict[veh.vehicle_id]) {
                     $scope.map_marker_dict[veh.vehicle_id] = new_set;
                     $scope.map_markers.push(new_set);
@@ -187,16 +185,23 @@ angular.module('SmartBattery')
                     _.extend($scope.map_marker_dict[veh.vehicle_id], new_set);
                 }
             });
+            resolve();
         })
         .catch(function(e) {
             $log.error('Status Update Failure: ' + String(e));
         });
+    };
+
+
+    function begin_update_vehicle_status() {
+        $log.log('starting update');
+        $scope.socket = io.connect(location.protocol + '//' + location.host + '/test');
+        $scope.socket.on('vehicle_update', handle_vehicle_update);
     }
 
     uiGmapIsReady.promise(1).then(function(maps) {
         $scope.gmap = maps[0];
-        $interval(update_vehicle_status, VehicleMapsController$Options.vehicle_status_interval);
-        update_vehicle_status();
+        begin_update_vehicle_status();
         $scope.ready = true;
         $log.log($scope.gmap);
 
