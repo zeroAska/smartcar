@@ -12,8 +12,7 @@
 <body>
     <div id="maps" ng-controller="VehicleMapsController" ng-cloak>
         <div id="map-canvas" class="google-map-canvas">
-            <ui-gmap-google-map center="map_options.center" zoom="map_options.zoom">
-            </ui-gmap-google-map>
+            <div class="google-map-container"></div>
         </div>
 
         <div id="vehicle-graphs" ng-if="active_marker" class="ani-fade">
@@ -46,7 +45,8 @@
         <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+        <script type="text/javascript" language="javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17"></script>
+        <script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
         <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.min.js"></script>

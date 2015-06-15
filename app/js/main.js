@@ -5,16 +5,9 @@
  */
 "use strict";
 
-angular.module('SmartBattery', ['ngResource', 'uiGmapgoogle-maps', 'chart.js', 'ngAnimate']);
+angular.module('SmartBattery', ['ngResource', 'chart.js', 'ngAnimate']);
 
 angular.module('SmartBattery')
-.config(function(uiGmapGoogleMapApiProvider) {
-    uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk',
-        v: '3.17',
-        libraries: 'weather,geometry,visualization'
-    });
-})
 .constant('VehicleMapsController$Options', {
     vehicle_status_url: 'vehicle_status.json',
     vehicle_status_interval: 1000.0,
@@ -100,9 +93,9 @@ angular.module('SmartBattery')
         }
     };
 })
-.controller('VehicleMapsController', function($q, $log, $scope, $interval, $http, $compile, VehicleMapsController$Options, uiGmapIsReady, VMC$Tools) {
+.controller('VehicleMapsController', function($q, $log, $scope, $interval, $http, $compile, VehicleMapsController$Options, VMC$Tools) {
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
-    $scope.map_options = {center: dummy_vehc, zoom: 15 };
+    $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_markers = [];
     $scope.map_marker_dict = {};
     $scope.gmap_markers = [];
@@ -143,7 +136,7 @@ angular.module('SmartBattery')
 
                     var marker = new MarkerWithLabel({
                         position: new google.maps.LatLng(new_set.latitude, new_set.longitude),
-                        map: $scope.gmap.map,
+                        map: $scope.gmap,
                         icon: VehicleMapsController$Options.default_icon,
                         title: 'test',
                         labelAnchor: new google.maps.Point(20, 40)
@@ -199,8 +192,13 @@ angular.module('SmartBattery')
         $scope.socket.on('vehicle_update', handle_vehicle_update);
     }
 
-    uiGmapIsReady.promise(1).then(function(maps) {
-        $scope.gmap = maps[0];
+    function load_maps() {
+        var dummy_vehc = {lat: 31.0268809, lng: 121.4367119 };
+        var options = {center: dummy_vehc, zoom: 2 }; // 15 };
+        $scope.gmap = new google.maps.Map($('#map-canvas .google-map-container')[0], options);
+    }
+
+    function start_maps() {
         begin_update_vehicle_status();
         $scope.ready = true;
         $log.log($scope.gmap);
@@ -213,7 +211,7 @@ angular.module('SmartBattery')
         $scope.$watch('active_marker', function(active_marker) {
             if (active_marker) {
                 // $scope.vehicle_info_window.open($scope.gmap_marker_dict[active_marker.vehicle_id]);
-                $scope.vehicle_info_window.open($scope.gmap.map, $scope.gmap_marker_dict[active_marker.vehicle_id]);
+                $scope.vehicle_info_window.open($scope.gmap, $scope.gmap_marker_dict[active_marker.vehicle_id]);
             } else {
                 $scope.vehicle_info_window.close();
             }
@@ -224,7 +222,10 @@ angular.module('SmartBattery')
                 $scope.active_marker = null;
             });
         });
-    });
+    }
+
+    load_maps();
+    start_maps();
 })
 .directive('coloredProgress', function() {
     return {

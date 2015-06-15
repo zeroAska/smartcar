@@ -21,6 +21,7 @@
     "angular-chart.js": "0.7.1",
     "angular-google-maps": "2.1.2",
     "bootstrap": "3.3.4",
-    "socket.io-client": "0.9.16"
+    "socket.io-client": "0.9.16",
+    "google-maps-utility-library-v3": "*"
   }
 }
