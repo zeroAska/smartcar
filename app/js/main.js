@@ -236,7 +236,7 @@ angular.module('SmartBattery')
         $scope.gmaps_load_failed = true;
     }, VehicleMapsController$Options.gmaps_load_timeout);
 })
-.directive('coloredProgress', function() {
+.directive('sbfColoredProgress', function() {
     return {
         template: "<div ng-class=\"{'progress-bar': true, 'progress-bar-success': value >= progress_breaks[1], 'progress-bar-warning': value >= progress_breaks[0] && value < progress_breaks[1], 'progress-bar-danger': value < progress_breaks[0]}\" ng-style=\"{width: value * 100 + '%'}\"></div>",
         restrict: 'AE',
