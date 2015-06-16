@@ -21,12 +21,14 @@ def background_thread():
     while True:
         time.sleep(1)
         count += 1
+        if count > 30:
+            count = 0
         msg = ({ \
             'type': 'vehicle_status',\
                 'vehicles':[\
                 {'vehicle_id': '1',\
-                 'longitude': 120.45+count*0.1,\
-                 'latitude': 75.123 + count*0.1,\
+                 'latitude': 31.0268809+count*0.1,\
+                 'longitude': 121.4367119 + count*0.1,\
                  'state_of_charge':0.56+count*0.01,\
                  'state_of_health': 0.678989+count*0.01,\
                     }],\
