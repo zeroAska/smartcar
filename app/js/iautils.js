@@ -1,4 +1,3 @@
-"use strict";
 angular.module('iaUtils', [])
 .directive('iauScript', function($log) {
     // For global callback functions
@@ -48,7 +47,7 @@ angular.module('iaUtils', [])
 
             function load_script() {
                 // Disable function to prevent reloading (accidental or otherwise)
-                load_script = null;
+                load_script = null;  // jshint ignore:line
 
                 var url = $scope.src;
 
@@ -64,7 +63,7 @@ angular.module('iaUtils', [])
                     window[callback_name] = function() {
                         on_loaded();
                         delete window[callback_name];
-                    }
+                    };
 
                     url = url.replace($scope.callback, callback_name);
                 }

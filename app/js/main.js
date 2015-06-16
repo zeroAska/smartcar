@@ -3,12 +3,10 @@
  * @author Yichen Zhao
  * @license Proprietary
  */
-"use strict";
+angular.module('SmartBatteryFrontend', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils']);
 
-angular.module('SmartBattery', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils']);
-
-angular.module('SmartBattery')
-.constant('VehicleMapsController$Options', {
+angular.module('SmartBatteryFrontend')
+.constant('sbfVMC$Options', {
     vehicle_status_url: 'vehicle_status.json',
     vehicle_status_interval: 1000.0,
     progress_breaks: [0.2, 0.8],
@@ -26,7 +24,7 @@ angular.module('SmartBattery')
     },
     gmaps_load_timeout: 10000
 })
-.factory('VMC$Tools', function($log, $compile) {
+.factory('sbfVMC$Tools', function($log, $compile) {
     return {
         compile_and_link: function(template, scope) {
             var template_element;
@@ -56,7 +54,7 @@ angular.module('SmartBattery')
 
             function cancel() {
                 if (timer) {
-                    clearInterval(timer);
+                    window.clearInterval(timer);
                 }
                 timer = null;
                 source_coord = null;
@@ -66,7 +64,7 @@ angular.module('SmartBattery')
             }
 
             function start() {
-                timer = setInterval(animation_step, step_time);
+                timer = window.setInterval(animation_step, step_time);
             }
             function animation_step() {
                 if (animation_counter < final_counter) {
@@ -90,11 +88,11 @@ angular.module('SmartBattery')
                 dest_coord = {lat: coords.lat(), lng: coords.lng()};
                 final_counter = Math.ceil(animation_time / step_time);
                 start();
-            }
+            };
         }
     };
 })
-.controller('VehicleMapsController', function($q, $log, $scope, $interval, $timeout, $http, $compile, VehicleMapsController$Options, VMC$Tools) {
+.controller('sbfVehicleMapsController', function($q, $log, $scope, $interval, $timeout, $http, $compile, sbfVMC$Options, sbfVMC$Tools) {
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_marker_dict = {};
@@ -109,15 +107,15 @@ angular.module('SmartBattery')
         this.marker = new MarkerWithLabel({
             position: new google.maps.LatLng(data.latitude, data.longitude),
             map: map,
-            icon: VehicleMapsController$Options.default_icon,
+            icon: sbfVMC$Options.default_icon,
             labelAnchor: new google.maps.Point(20, 40)
         });
         this.scope = $scope.$new();
         this.scope.vec = data;
-        this.scope.progress_breaks = VehicleMapsController$Options.progress_breaks;
-        this._element = VMC$Tools.compile_and_link('#marker-label', this.scope);
+        this.scope.progress_breaks = sbfVMC$Options.progress_breaks;
+        this._element = sbfVMC$Tools.compile_and_link('#marker-label', this.scope);
         this.marker.set('labelContent', this._element[0]);
-        this.slider = new VMC$Tools.MarkSlider(this.marker);
+        this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
         this.scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
             // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
             self.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
@@ -131,7 +129,7 @@ angular.module('SmartBattery')
         var listn = google.maps.event.addListener(this.marker, 'click', callback);
         this.listeners.push(listn);
         return listn;
-    }
+    };
 
     MapMarker.prototype.close = function() {
         _.forEach(this.listeners, function(listener) {
@@ -139,16 +137,16 @@ angular.module('SmartBattery')
         });
         _.forEach(this.destructors, function(destr) {
             destr();
-        })
+        });
         this.slider.cancel();
         this.marker.setMap(null);
         this._element.remove();
         this.scope.$destroy();
-    }
+    };
 
     MapMarker.prototype.register_destructor = function(destr) {
         this.destructors.push(destr);
-    }
+    };
 
     function handle_vehicle_update(data) {
         $log.log(data);
@@ -195,9 +193,9 @@ angular.module('SmartBattery')
                     map_marker.register_destructor(
                         $scope.$watch('active_marker', function(amarker) {
                             if (amarker === new_set) {
-                                map_marker.marker.setIcon(VehicleMapsController$Options.active_icon);
+                                map_marker.marker.setIcon(sbfVMC$Options.active_icon);
                             } else {
-                                map_marker.marker.setIcon(VehicleMapsController$Options.default_icon);
+                                map_marker.marker.setIcon(sbfVMC$Options.default_icon);
                             }
                         })
                     );
@@ -220,19 +218,19 @@ angular.module('SmartBattery')
         .catch(function(e) {
             $log.error('Status Update Failure: ' + String(e));
         });
-    };
+    }
 
 
     function begin_update_vehicle_status() {
         $log.log('starting update');
-        $scope.socket = io.connect(location.protocol + '//' + location.host + '/test');
+        $scope.socket = io.connect(window.location.protocol + '//' + window.location.host + '/test');
         $scope.socket.on('vehicle_update', handle_vehicle_update);
     }
 
     function load_maps() {
         var dummy_vehc = {lat: 31.0268809, lng: 121.4367119 };
         var options = {center: dummy_vehc, zoom: 8 }; // 15 };
-        $scope.gmap = new google.maps.Map($('#map-canvas .google-map-container')[0], options);
+        $scope.gmap = new google.maps.Map(angular.element('#map-canvas .google-map-container')[0], options);
     }
 
     function start_maps() {
@@ -241,7 +239,7 @@ angular.module('SmartBattery')
         $log.log($scope.gmap);
 
         $scope.vehicle_info_window = new google.maps.InfoWindow();
-        var te = VMC$Tools.compile_and_link('#vehicle-info-window', $scope);
+        var te = sbfVMC$Tools.compile_and_link('#vehicle-info-window', $scope);
         $log.log(te);
         $scope.vehicle_info_window.setContent(te[0]);
 
@@ -264,12 +262,12 @@ angular.module('SmartBattery')
         $timeout.cancel(gmaps_load_timeout);
         load_maps();
         start_maps();
-    }
+    };
 
     $scope.gmaps_load_failed = false;
     var gmaps_load_timeout = $timeout(function() {
         $scope.gmaps_load_failed = true;
-    }, VehicleMapsController$Options.gmaps_load_timeout);
+    }, sbfVMC$Options.gmaps_load_timeout);
 })
 .directive('sbfColoredProgress', function() {
     return {
