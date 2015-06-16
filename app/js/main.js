@@ -348,11 +348,9 @@ angular.module('SmartBattery')
             });
 
             if ($attr.loadOnReady != null) {
-                angular.element(document).ready(function() {
-                    $scope.$apply(function() {
-                        $scope.load = true;
-                    });
-                });
+                // Setting the variable so that if necessary, the external
+                // controller can still detect the load event (via $watch)
+                $scope.load = true;
             }
         }
     };
