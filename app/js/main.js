@@ -247,7 +247,7 @@ angular.module('SmartBattery')
         }
     };
 })
-.directive('sbfScriptLoader', function($log) {
+.directive('iauScript', function($log) {
     // For global callback functions
     var directive_counter = 0;
     /**
@@ -307,7 +307,7 @@ angular.module('SmartBattery')
                 }
 
                 if ($scope.callback) {
-                    var callback_name = '_sbfScriptLoader_callback_' + instance_number.toString();
+                    var callback_name = '_iauScript_callback_' + instance_number.toString();
                     window[callback_name] = function() {
                         on_loaded();
                         delete window[callback_name];
