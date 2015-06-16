@@ -23,17 +23,24 @@ def background_thread():
         count += 1
         if count > 30:
             count = 0
-        msg = ({ \
-            'type': 'vehicle_status',\
-                'vehicles':[\
-                {'vehicle_id': '1',\
-                 'latitude': 31.0268809+count*0.1,\
-                 'longitude': 121.4367119 - count*0.1,\
-                 'state_of_charge':0.56+count*0.01,\
-                 'state_of_health': 0.678989+count*0.01,\
-                    }],\
-                    'count': count\
-                })
+        msg = ({
+            'type': 'vehicle_status',
+            'vehicles':[
+                {'vehicle_id': count,
+                    'latitude': 31.0268809+count*0.1,
+                    'longitude': 121.4367119 - count*0.1,
+                    'state_of_charge':0.56+count*0.01,
+                    'state_of_health': 0.678989+count*0.01,
+                    },
+                {'vehicle_id': count + 1,
+                    'latitude': 31.1258709+count*0.1,
+                    'longitude': 121.3267519 - count*0.1,
+                    'state_of_charge':0.56+count*0.01,
+                    'state_of_health': 0.678989+count*0.01,
+                    },
+                ],
+            'count': count
+            })
         socketio.emit('vehicle_update',msg,namespace='/test')
 
 

@@ -97,13 +97,58 @@ angular.module('SmartBattery')
 .controller('VehicleMapsController', function($q, $log, $scope, $interval, $timeout, $http, $compile, VehicleMapsController$Options, VMC$Tools) {
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
-    $scope.map_markers = [];
     $scope.map_marker_dict = {};
-    $scope.gmap_markers = [];
-    $scope.gmap_marker_dict = {};
     $scope.gmap = null;
     $scope.active_marker = null;
     $scope.ready = false;
+
+
+    function MapMarker($scope, data, map) {
+        var self = this;
+        this.data = data;
+        this.marker = new MarkerWithLabel({
+            position: new google.maps.LatLng(data.latitude, data.longitude),
+            map: map,
+            icon: VehicleMapsController$Options.default_icon,
+            labelAnchor: new google.maps.Point(20, 40)
+        });
+        this.scope = $scope.$new();
+        this.scope.vec = data;
+        this.scope.progress_breaks = VehicleMapsController$Options.progress_breaks;
+        this._element = VMC$Tools.compile_and_link('#marker-label', this.scope);
+        this.marker.set('labelContent', this._element[0]);
+        this.slider = new VMC$Tools.MarkSlider(this.marker);
+        this.scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
+            // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
+            self.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
+        });
+
+        this.listeners = [];
+        this.destructors = [];
+    }
+
+    MapMarker.prototype.click = function(callback) {
+        var listn = google.maps.event.addListener(this.marker, 'click', callback);
+        this.listeners.push(listn);
+        return listn;
+    }
+
+    MapMarker.prototype.close = function() {
+        _.forEach(this.listeners, function(listener) {
+            google.maps.event.removeListener(listener);
+        });
+        _.forEach(this.destructors, function(destr) {
+            destr();
+        })
+        this.slider.cancel();
+        this.marker.setMap(null);
+        this._element.remove();
+        this.scope.$destroy();
+    }
+
+    MapMarker.prototype.register_destructor = function(destr) {
+        this.destructors.push(destr);
+    }
 
     function handle_vehicle_update(data) {
         $log.log(data);
@@ -112,10 +157,13 @@ angular.module('SmartBattery')
                 throw new Error('Invalid data type received');
             }
 
+
+            var old_keys = _.object(_.keys($scope.map_marker_dict));
             var dataset = data.vehicles;
             _.forEach(dataset, function(veh) {
+                delete old_keys[veh.vehicle_id];
                 var new_set = {
-                    vehicle_id: parseInt(veh.vehicle_id),
+                    vehicle_id: veh.vehicle_id,
                     longitude: veh.longitude,
                     latitude: veh.latitude,
                     title: 'Vehicle ' + String(veh.vehicle_id),
@@ -130,31 +178,12 @@ angular.module('SmartBattery')
                     [28, 48 * Math.random(), 40, 19, 86, 27, 90]
                 ];
                 if (!$scope.map_marker_dict[veh.vehicle_id]) {
-                    $scope.map_marker_dict[veh.vehicle_id] = new_set;
-                    $scope.map_markers.push(new_set);
+                    var map_marker = new MapMarker($scope, new_set, $scope.gmap);
+                    $scope.map_marker_dict[veh.vehicle_id] = map_marker;
                     new_set.show = false;
                     new_set.options = {};
 
-                    var marker = new MarkerWithLabel({
-                        position: new google.maps.LatLng(new_set.latitude, new_set.longitude),
-                        map: $scope.gmap,
-                        icon: VehicleMapsController$Options.default_icon,
-                        title: 'test',
-                        labelAnchor: new google.maps.Point(20, 40)
-                    });
-                    $scope.gmap_markers.push(marker);
-                    $scope.gmap_marker_dict[new_set.vehicle_id] = marker;
-                    // XXX Register and wait for scope $destroy when marker
-                    // goes out of range
-                    var new_scope = $scope.$new();
-                    new_scope.vec = new_set;
-                    new_scope.progress_breaks = VehicleMapsController$Options.progress_breaks;
-                    var elem = VMC$Tools.compile_and_link('#marker-label', new_scope);
-                    // XXX keep in mind that MarkerWithLabel with labelContent
-                    // being a DOM element does not work by default. A patch
-                    // is needed
-                    marker.set('labelContent', elem[0]);
-                    google.maps.event.addListener(marker, 'click', function() {
+                    map_marker.click(function() {
                         $scope.$apply(function() {
                             if ($scope.active_marker === new_set) {
                                 $scope.active_marker = null;
@@ -163,20 +192,27 @@ angular.module('SmartBattery')
                             }
                         });
                     });
-                    var slider = new VMC$Tools.MarkSlider(marker);
-                    new_scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
-                        // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
-                        slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
-                    });
-                    $scope.$watch('active_marker', function(amarker) {
-                        if (amarker === new_set) {
-                            marker.setIcon(VehicleMapsController$Options.active_icon);
-                        } else {
-                            marker.setIcon(VehicleMapsController$Options.default_icon);
-                        }
-                    });
+                    map_marker.register_destructor(
+                        $scope.$watch('active_marker', function(amarker) {
+                            if (amarker === new_set) {
+                                map_marker.marker.setIcon(VehicleMapsController$Options.active_icon);
+                            } else {
+                                map_marker.marker.setIcon(VehicleMapsController$Options.default_icon);
+                            }
+                        })
+                    );
                 } else {
-                    _.extend($scope.map_marker_dict[veh.vehicle_id], new_set);
+                    _.extend($scope.map_marker_dict[veh.vehicle_id].data, new_set);
+                }
+            });
+            _.keys(old_keys).forEach(function(vehicle_id) {
+                if ($scope.map_marker_dict[vehicle_id]) {
+                    var marker = $scope.map_marker_dict[vehicle_id];
+                    delete $scope.map_marker_dict[vehicle_id];
+                    if (marker.data === $scope.active_marker) {
+                        $scope.active_marker = null;
+                    }
+                    marker.close();
                 }
             });
             resolve();
@@ -211,8 +247,7 @@ angular.module('SmartBattery')
 
         $scope.$watch('active_marker', function(active_marker) {
             if (active_marker) {
-                // $scope.vehicle_info_window.open($scope.gmap_marker_dict[active_marker.vehicle_id]);
-                $scope.vehicle_info_window.open($scope.gmap, $scope.gmap_marker_dict[active_marker.vehicle_id]);
+                $scope.vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_marker.vehicle_id].marker);
             } else {
                 $scope.vehicle_info_window.close();
             }
