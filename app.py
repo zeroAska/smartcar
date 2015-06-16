@@ -46,6 +46,10 @@ def index():
 def send_static(path):
     return send_from_directory('app', path)
 
+@app.route('/dist/<path:path>')
+def send_dist(path):
+    return send_from_directory('dist', path)
+
 @app.route('/bower_components/<path:path>')
 def send_bower(path):
     return send_from_directory('bower_components', path)
