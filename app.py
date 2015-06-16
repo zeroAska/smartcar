@@ -28,7 +28,7 @@ def background_thread():
                 'vehicles':[\
                 {'vehicle_id': '1',\
                  'latitude': 31.0268809+count*0.1,\
-                 'longitude': 121.4367119 + count*0.1,\
+                 'longitude': 121.4367119 - count*0.1,\
                  'state_of_charge':0.56+count*0.01,\
                  'state_of_health': 0.678989+count*0.01,\
                     }],\

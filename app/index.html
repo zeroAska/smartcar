@@ -49,8 +49,8 @@
             <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.min.js"></script>
 
             <script language="javascript" type="text/javascript" src="js/main.js"></script>
-            <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed = true"/>
-            <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed = true"/>
+            <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
+            <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
         </div>
     </div>
 
@@ -61,13 +61,13 @@
                     <div style="position: relative">
                         <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
                         <div class="progress" style="width: 40px; height: 10px; margin-bottom: 1px;">
-                            <sbf-colored-progress value="vec.data.state_of_charge" progressbreaks="progress_breaks"/>
+                            <sbf-colored-progress value="vec.data.state_of_charge" progressbreaks="progress_breaks"></sbf-colored-progress>
                         </div>
                     </div>
                     <div style="position: relative">
                         <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
                         <div class="progress" style="width: 40px; height: 10px;">
-                            <sbf-colored-progress value="vec.data.state_of_health" progressbreaks="progress_breaks"/>
+                            <sbf-colored-progress value="vec.data.state_of_health" progressbreaks="progress_breaks"></sbf-colored-progress>
                         </div>
                     </div>
                 </div>

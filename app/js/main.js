@@ -195,7 +195,7 @@ angular.module('SmartBattery')
 
     function load_maps() {
         var dummy_vehc = {lat: 31.0268809, lng: 121.4367119 };
-        var options = {center: dummy_vehc, zoom: 2 }; // 15 };
+        var options = {center: dummy_vehc, zoom: 8 }; // 15 };
         $scope.gmap = new google.maps.Map($('#map-canvas .google-map-container')[0], options);
     }
 
@@ -336,7 +336,7 @@ angular.module('SmartBattery')
                     var scriptTag = angular.element('<script>');
                     scriptTag.attr('src', url);
                     scriptTag.attr('type', 'text/javascript');
-                    element.replaceWith(scriptTag);
+                    element.after(scriptTag);
                 }
             }
 
