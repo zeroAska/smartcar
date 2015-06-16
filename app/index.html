@@ -35,24 +35,25 @@
         </div>
 
         <div id="not-ready" ng-if="!ready" class="ani-fade">
-            <div class="text">Loading Maps ...</div>
+            <div class="text" ng-if="!gmaps_load_failed">Loading Maps ... <span ng-if="_gmaps_loaded">Almost there</span></div>
+            <div class="text" ng-if="gmaps_load_failed">Loading Failed! Maybe you don't have access to Google Maps</div>
+        </div>
+        <div id="script-block">
+            <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+            <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.min.js"></script>
+
+            <script language="javascript" type="text/javascript" src="js/main.js"></script>
+            <sbf-script-loader loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed = true"/>
+            <sbf-script-loader language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed = true"/>
         </div>
     </div>
 
-    <div id="script-block">
-        <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.min.js"></script>
-        <script type="text/javascript" language="javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
-        <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.min.js"></script>
-
-        <script language="javascript" type="text/javascript" src="js/main.js"></script>
-    </div>
     <div style="display: none" id="angular-templates" ng-non-bindable>
         <div id="marker-label">
             <div>
