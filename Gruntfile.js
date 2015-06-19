@@ -109,6 +109,22 @@ module.exports = function(grunt) {
             }
         },
         clean: ['.tmp', 'dist', 'app/js/app.js*'],
+        jade: {
+            compile: {
+                options: {
+                    pretty: true,
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'app',
+                        src: ['*.jade'],
+                        ext: '.html',
+                        dest: 'app',
+                    },
+                ]
+            }
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -121,5 +137,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-newer');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.registerTask('default', ['jshint', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
+    grunt.loadNpmTasks('grunt-contrib-jade');
+    grunt.registerTask('default', ['jshint', 'jade', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };

@@ -1,0 +1,55 @@
+extends layout/base.jade
+block variables
+  - var title = 'Maps Basic'
+block body
+  div#maps(ng-controller="sbfVehicleMapsController")
+    div#map-canvas(class="google-map-canvas")
+      div.google-map-container
+
+    div.ani-fade#vehicle-graphs(ng-if="active_marker")
+      div.vehicle-graph
+        div
+          canvas.lines.chart.chart-line(data="active_marker.charts.data", labels="active_marker.charts.labels", legend="true", series="active_marker.charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}")
+
+    div#not-ready.ani-fade(ng-if="!ready")
+      div.text(ng-if="!gmaps_load_failed")
+        | Loading Maps ...
+        = ' '
+        span(ng-if="_gmaps_loaded") Almost there
+      div.text(ng-if="gmaps_load_failed")
+        Loading Failed! Maybe you don't have access to Google Maps
+    div.script-block
+      <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
+      <!-- process:[src] js/markerwithlabel.min.js -->
+      <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
+      <!-- /process -->
+
+  div#angular-templates(ng-non-bindable, style="display: none")
+    div#marker-label
+      div
+        div.ani-fade(style="width: 70px", ng-if="vec!==active_marker")
+          div(style="position: relative")
+            div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOC
+            div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
+              sbf-colored-progress(value="vec.data.state_of_charge",progressbreaks="progress_breaks")
+          div(style="position: relative")
+            div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOC
+            div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
+              sbf-colored-progress(value="vec.data.state_of_health",progressbreaks="progress_breaks")
+    div#vehicle-info-window
+      div
+        div(ng-if="active_marker",style="width: 180px")
+          strong {{ active_marker.title }}
+          dl
+            dt Model
+            dd N/A
+            dt Bat Type/#
+            dd N/A
+            dt SOC
+            dd {{ (active_marker.data.state_of_charge * 100).toFixed(2) }}%
+            dt SOH
+            dd {{ (active_marker.data.state_of_health * 100).toFixed(2) }}%
+            dt Driving Behavior
+            dd N/A
+            dt Coords
+            dd {{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}

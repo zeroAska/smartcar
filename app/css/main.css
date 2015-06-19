@@ -1,6 +1,10 @@
 #map-canvas, #vehicle-list {
 }
 
+.script-block {
+    display: none;
+}
+
 .google-map-canvas {
 }
 
