@@ -1,10 +1,3 @@
-/**
- * @file main.js
- * @author Yichen Zhao
- * @license Proprietary
- */
-angular.module('SmartBatteryFrontend', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils']);
-
 angular.module('SmartBatteryFrontend')
 .constant('sbfVMC$Options', {
     vehicle_status_url: 'vehicle_status.json',
@@ -269,6 +262,8 @@ angular.module('SmartBatteryFrontend')
         $scope.gmaps_load_failed = true;
     }, sbfVMC$Options.gmaps_load_timeout);
 })
+
+// XXX extract below by necessity
 .directive('sbfColoredProgress', function() {
     return {
         template: "<div ng-class=\"{'progress-bar': true, 'progress-bar-success': value >= progress_breaks[1], 'progress-bar-warning': value >= progress_breaks[0] && value < progress_breaks[1], 'progress-bar-danger': value < progress_breaks[0]}\" ng-style=\"{width: value * 100 + '%'}\"></div>",

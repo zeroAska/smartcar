@@ -1,5 +1,4 @@
-angular.module('iaUtils', [])
-.directive('iauScript', function($log) {
+angular.module('iaUtils').directive('iauScript', function($log) {
     // For global callback functions
     var directive_counter = 0;
     /**

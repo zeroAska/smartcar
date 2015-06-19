@@ -25,7 +25,9 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             app: {
-                src: ['app/js/app/**/*.js'],
+                // force index.js to precede others to allow module definitions
+                // to occur first
+                src: ['app/js/app/**/index.js', 'app/js/app/**/*.js'],
                 dest: 'app/js/app.js',
                 options: {
                     banner: '(function(){"use strict";',
