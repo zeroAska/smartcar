@@ -14,32 +14,45 @@ module.exports = function(grunt) {
                     document: true
                 },
                 eqnull: true,
+                ignores: ['app/js/app.js'],
+            }
+        },
+        concat: {
+            options: {
+                separator: ';'
+            },
+            app: {
+                src: ['app/js/app/**/*.js'],
+                dest: 'app/js/app.js',
+                options: {
+                    banner: '(function(){"use strict";',
+                        footer: '})();',
+                        sourceMap: true,
+                },
             }
         },
         ngAnnotate: {
             options: {
             },
             app: {
-                files: [
+                files:[
                     {
-                        expand: true,
-                        src: ['app/js/**/*.js'],
-                        dest: '.tmp/ngAnnotate/app',
-                    },
+                        src: ['app/js/app.js'],
+                        dest: '.tmp/ngAnnotate/app.js',
+                    }
                 ]
-            }
-        },
-        concat: {
-            app: {
-                src: ['.tmp/ngAnnotate/app/**/*.js'],
-                dest: 'dist/js/app.js',
             }
         },
         uglify: {
             app: {
                 files: {
-                    'dist/js/app.min.js': ['dist/js/app.js'],
+                    'dist/js/app.min.js': '.tmp/ngAnnotate/app.js',
                 },
+            },
+            main: {
+                files: {
+                    'dist/js/markerwithlabel.min.js': 'bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel.js'
+                }
             }
         },
         copy: {
@@ -48,11 +61,35 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: 'app',
-                        src: ['**/*.html', '**/css/*', '**/imgs/*'],
+                        src: ['**/css/*', '**/imgs/*'],
                         dest: 'dist/',
                     }
                 ]
             }
+        },
+        processhtml: {
+            options: {
+                commentMarker: 'process',
+            },
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'app',
+                        src: ['index.html'],
+                        dest: 'dist/',
+                    },
+                ],
+            },
+        },
+        useminPrepare: {
+            html: 'app/index.html',
+            options: {
+                dest: 'dist',
+            }
+        },
+        usemin: {
+            html: ['dist/index.html']
         },
         clean: ['.tmp', 'dist'],
     });
@@ -63,5 +100,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.registerTask('default', ['jshint', 'ngAnnotate', 'concat', 'uglify', 'copy']);
+    grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-usemin');
+    grunt.loadNpmTasks('grunt-newer');
+    grunt.registerTask('default', ['jshint', 'useminPrepare', 'processhtml', 'newer:concat', 'ngAnnotate', 'newer:uglify', 'usemin', 'copy']);
 };
