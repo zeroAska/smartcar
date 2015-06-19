@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        project: {
+            pages: ['index.html', 'vehicle_details.html'],
+        },
         jshint: {
             files: ['Gruntfile.js', 'app/js/**/*.js'],
             options: {
@@ -80,20 +83,28 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: 'app',
-                        src: ['index.html'],
+                        src: ['<%= project.pages %>'],
                         dest: 'dist/',
                     },
                 ],
             },
         },
         useminPrepare: {
-            html: 'app/index.html',
+            html: {
+                expand: true,
+                cwd: 'app',
+                src: ['<%= project.pages %>'],
+            },
             options: {
                 dest: 'dist',
             }
         },
         usemin: {
-            html: ['dist/index.html']
+            html: {
+                expand: true,
+                cwd: 'dist',
+                src: ['<%= project.pages %>'],
+            }
         },
         clean: ['.tmp', 'dist', 'app/js/app.js*'],
     });
