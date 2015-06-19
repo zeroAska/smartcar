@@ -61,8 +61,12 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         cwd: 'app',
-                        src: ['**/css/*', '**/imgs/*'],
+                        src: ['**/imgs/*'],
                         dest: 'dist/',
+                    },
+                    {
+                        src: 'bower_components/angular/angular-csp.css',
+                        dest: 'dist/css/angular-csp.css',
                     }
                 ]
             }
@@ -91,7 +95,7 @@ module.exports = function(grunt) {
         usemin: {
             html: ['dist/index.html']
         },
-        clean: ['.tmp', 'dist'],
+        clean: ['.tmp', 'dist', 'app/js/app.js*'],
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -103,5 +107,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-usemin');
     grunt.loadNpmTasks('grunt-newer');
-    grunt.registerTask('default', ['jshint', 'useminPrepare', 'processhtml', 'newer:concat', 'ngAnnotate', 'newer:uglify', 'usemin', 'copy']);
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.registerTask('default', ['jshint', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };

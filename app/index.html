@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Maps Basic</title>
 
+    <!-- build:css css/plugins.min.css -->
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
-    <link rel="stylesheet" href="css/main.css" type="text/css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../bower_components/angular/angular-csp.css" type="text/css">
+    <!-- endbuild -->
+    <!-- process:[href] css/ -->
+    <!-- Angular CSP must be loaded independently, otherwise FOUC will still occur -->
+    <link rel="stylesheet" href="../bower_components/angular/angular-csp.css">
+    <!-- /process -->
+    <!-- build:css css/app.min.css -->
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <!-- endbuild -->
 </head>
 <body>
     <div id="maps" ng-controller="sbfVehicleMapsController" ng-cloak>
