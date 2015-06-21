@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="SmartBatteryFrontend">
-<head>
-    <meta charset="UTF-8">
-    <title>Maps Basic</title>
-
-    <!-- build:css css/plugins.min.css -->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vehicle Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- build:css css/plugins.min.css -->
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
     <!-- endbuild -->
@@ -15,98 +15,27 @@
     <!-- build:css css/app.min.css -->
     <link rel="stylesheet" href="css/main.css" type="text/css">
     <!-- endbuild -->
-</head>
-<body>
-    <div id="maps" ng-controller="sbfVehicleMapsController" ng-cloak>
-        <div id="map-canvas" class="google-map-canvas">
-            <div class="google-map-container"></div>
-        </div>
-
-        <div id="vehicle-graphs" ng-if="active_marker" class="ani-fade">
-            <div class="vehicle-graph">
-                <div>
-                    <canvas class="lines chart chart-line" data="active_marker.charts.data" labels="active_marker.charts.labels"
-                    legend="true" series="active_marker.charts.series"
-                    height="185" width="500" options="{scaleLabel: '<%=value%>%', scaleBeginAtZero: true}"
-                    ></canvas>
-                </div>
-            </div>
-            <div class="vehicle-graph">
-                <div>
-                    <canvas class="lines chart chart-line" data="active_marker.charts.data" labels="active_marker.charts.labels"
-                    legend="true" series="active_marker.charts.series"
-                    height="185" width="500" options="{scaleLabel: '<%=value%>%', scaleBeginAtZero: true}"
-                    ></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div id="not-ready" ng-if="!ready" class="ani-fade">
-            <div class="text" ng-if="!gmaps_load_failed">Loading Maps ... <span ng-if="_gmaps_loaded">Almost there</span></div>
-            <div class="text" ng-if="gmaps_load_failed">Loading Failed! Maybe you don't have access to Google Maps</div>
-        </div>
-        <div id="script-block">
-            <!-- build:js js/plugins.min.js -->
-            <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.js"></script>
-            <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.js"></script>
-            <!-- endbuild -->
-            <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
-            <!-- process:[src] js/markerwithlabel.min.js -->
-            <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
-            <!-- /process -->
-
-            <!-- process:[src] js/app.min.js -->
-            <script language="javascript" type="text/javascript" src="js/app.js"></script>
-            <!-- /process -->
-        </div>
+  </head>
+  <body ng-cloak>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header"><span class="brand">Smart Battery Frontend</span></div>
+      </div>
+    </nav>
+    <div class="script-block">
+      <!-- build:js js/plugins.min.js -->
+      <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.js"></script>
+      <!-- endbuild -->
+      <!-- process:[src] js/app.min.js -->
+      <script language="javascript" type="text/javascript" src="js/app.js"></script>
+      <!-- /process -->
     </div>
-
-    <div style="display: none" id="angular-templates" ng-non-bindable>
-        <div id="marker-label">
-            <div>
-                <div style="width: 70px" ng-if="vec !== active_marker" class="ani-fade">
-                    <div style="position: relative">
-                        <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
-                        <div class="progress" style="width: 40px; height: 10px; margin-bottom: 1px;">
-                            <sbf-colored-progress value="vec.data.state_of_charge" progressbreaks="progress_breaks"></sbf-colored-progress>
-                        </div>
-                    </div>
-                    <div style="position: relative">
-                        <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
-                        <div class="progress" style="width: 40px; height: 10px;">
-                            <sbf-colored-progress value="vec.data.state_of_health" progressbreaks="progress_breaks"></sbf-colored-progress>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="vehicle-info-window">
-            <div>
-                <div ng-if="active_marker" style="width: 180px">
-                    <strong>{{ active_marker.title }}</strong>
-                    <dl>
-                        <dt>Model</dt>
-                        <dd>N/A</dd>
-                        <dt>Bat Type/#</dt>
-                        <dd>N/A</dd>
-                        <dt>SOC</dt>
-                        <dd>{{ (active_marker.data.state_of_charge * 100).toFixed(2) }}%</dd>
-                        <dt>SOH</dt>
-                        <dd>{{ (active_marker.data.state_of_health * 100).toFixed(2) }}%</dd>
-                        <dt>Driving Behavior</dt>
-                        <dd>N/A</dd>
-                        <dt>Coords</dt>
-                        <dd>{{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+  </body>
 </html>

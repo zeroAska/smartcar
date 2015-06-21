@@ -125,6 +125,12 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        watch: {
+            default: {
+                files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/imgs/**'],
+                tasks: 'default',
+            },
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -138,5 +144,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-newer');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jade');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.registerTask('default', ['jshint', 'jade', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };
