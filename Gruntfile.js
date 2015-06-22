@@ -129,6 +129,9 @@ module.exports = function(grunt) {
             default: {
                 files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/imgs/**'],
                 tasks: 'default',
+                options: {
+                    livereload: true,
+                },
             },
         },
     });

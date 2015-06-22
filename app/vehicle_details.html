@@ -17,11 +17,78 @@
     <!-- endbuild -->
   </head>
   <body ng-cloak>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header"><span class="brand">Smart Battery Frontend</span></div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <div class="navbar-brand">Smart Battery</div>
+              </div>
+              <div>
+                <ul class="nav navbar-nav">
+                  <li class="active"><a href="#">Menu 1</a></li>
+                  <li><a href="#">Menu 2</a></li>
+                </ul>
+              </div>
+              <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                  <div class="navbar-text">&lt;User&gt; &lt;Image&gt;
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
       </div>
-    </nav>
+    </div>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="col-md-3">
+          <div class="panel panel-default">
+            <div class="panel-heading">Storm Edge
+              <div style="position: relative; top: -5px" class="pull-right">
+                <button class="btn btn-primary btn-sm">Edit</button>
+              </div>
+            </div>
+            <div class="panel-body"><img style="height: 100px">
+              <dl>
+                <dt>Vehicle ID</dt>
+                <dd>XXX</dd>
+                <dt>Vehicle Model</dt>
+                <dd>XXX</dd>
+                <dt>Battery Model</dt>
+                <dd>XXX</dd>
+                <dt>Usage Date</dt>
+                <dd>XXX</dd>
+                <dt>Current Status</dt>
+                <dd>XXX</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="panel panel-primary">
+            <div class="panel-heading">Dashboard</div>
+            <div class="panel-body">
+              <div class="row-fluid">
+                <div class="col-md-4">Part 1</div>
+                <div class="col-md-4">Part 2</div>
+                <div class="col-md-4">Part 3</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <ul role="tablist" class="nav nav-tabs">
+              <li role="presentation"><a>One</a></li>
+              <li role="presentation"><a>Two</a></li>
+              <li role="presentation"><a>Three</a></li>
+            </ul>
+            <div class="tab-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="script-block">
       <!-- build:js js/plugins.min.js -->
       <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>

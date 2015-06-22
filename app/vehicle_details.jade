@@ -2,7 +2,63 @@ extends layout/base.jade
 block variables
   - var title = 'Vehicle Details'
 block body
-  nav.navbar.navbar-default
-    div.container-fluid
-      div.navbar-header
-        span.brand Smart Battery Frontend
+  div.container-fluid
+    div.row-fluid
+      div.col-md-12
+        nav.navbar.navbar-default
+          div.container-fluid
+            div.navbar-header
+              div.navbar-brand Smart Battery
+            //- Collapse?
+            div
+              ul.nav.navbar-nav
+                li.active
+                  a(href="#") Menu 1
+                li
+                  a(href="#") Menu 2
+            div.navbar-right
+              ul.nav.navbar-nav
+                div.navbar-text
+                  = '<User> <Image>'
+  div.container-fluid
+    div.row-fluid
+      div.col-md-3
+        div.panel.panel-default
+          div.panel-heading
+            | Storm Edge
+            div.pull-right(style="position: relative; top: -5px")
+              button.btn.btn-primary.btn-sm Edit
+          div.panel-body
+            img(style="height: 100px")
+            dl
+              dt Vehicle ID
+              dd XXX
+              dt Vehicle Model
+              dd XXX
+              dt Battery Model
+              dd XXX
+              dt Usage Date
+              dd XXX
+              dt Current Status
+              dd XXX
+      div.col-md-9
+        div.panel.panel-primary
+          div.panel-heading Dashboard
+          div.panel-body
+            div.row-fluid
+              div.col-md-4
+                | Part 1
+              div.col-md-4
+                | Part 2
+              div.col-md-4
+                | Part 3
+        div
+          ul.nav.nav-tabs(role="tablist")
+            li(role="presentation")
+              a One
+            li(role="presentation")
+              a Two
+            li(role="presentation")
+              a Three
+          div.tab-content
+
