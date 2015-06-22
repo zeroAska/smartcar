@@ -1,6 +1,7 @@
 extends layout/base.jade
 block variables
   - var title = 'Maps Basic'
+  - var page_module = 'sbfModuleVehiclesMap'
 block body
   div#maps(ng-controller="sbfVehicleMapsController")
     div#map-canvas(class="google-map-canvas")

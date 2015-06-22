@@ -1,4 +1,4 @@
-angular.module('SmartBatteryFrontend')
+angular.module('sbfModuleVehicleDetails')
 .controller('sbfVehicleDetailsController', function($scope, $log) {
     $scope.set_to_today = function() {
         var current_time = new Date();

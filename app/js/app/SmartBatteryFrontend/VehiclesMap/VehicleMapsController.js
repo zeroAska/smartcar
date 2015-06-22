@@ -1,4 +1,4 @@
-angular.module('SmartBatteryFrontend')
+angular.module('sbfModuleVehiclesMap')
 .constant('sbfVMC$Options', {
     vehicle_status_url: 'vehicle_status.json',
     vehicle_status_interval: 1000.0,
