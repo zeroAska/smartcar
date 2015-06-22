@@ -54,3 +54,5 @@ block body
             dd N/A
             dt Coords
             dd {{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}
+          div
+            a.btn.btn-primary.btn-sm(href="vehicle_details.html#/vehicle_details/{{ active_marker.vehicle_id }}") View Details
