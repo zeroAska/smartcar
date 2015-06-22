@@ -21,56 +21,69 @@ block body
               ul.nav.navbar-nav
                 div.navbar-text
                   = '<User> <Image>'
-  div.container-fluid(ng-controller="sbfVehicleDetailsController")
-    div.row-fluid
-      div.col-lg-3
-        div.panel.panel-default
-          div.panel-heading
-            | Storm Edge
-            div.pull-right(style="position: relative; top: -5px")
-              button.btn.btn-primary.btn-sm(type="button") Edit
-          div.panel-body
-            img(style="height: 100px")
-            dl
-              dt Vehicle ID
-              dd XXX
-              dt Vehicle Model
-              dd XXX
-              dt Battery Model
-              dd XXX
-              dt Usage Date
-              dd XXX
-              dt Current Status
-              dd XXX
-      div.col-lg-9
-        div.panel.panel-primary
-          div.panel-heading Dashboard
-          div.panel-body
-            div.row-fluid
-              div.col-lg-4
-                div
-                  datepicker(ng-model="display_date")
-                div.btn-group(style="margin-top: 10px")
-                  div.btn-group
-                    button.btn.btn-info.btn-sm(type="button", ng-click="set_to_today()") Today
-              div.col-lg-4
-                div
-                  div Mileage
-                  div Average Energy Consumption
-                  div Daily Mileage
-                  div Daily Energy Consumption
-                  div Average Energy Consumption
-                  div Notes
-              div.col-lg-4
-                | Part 3
-        div
-          tabset
-            tab(heading="Vehicle Report")
-              | One
-            tab(heading="Vehicle Performance Report")
-              | Two
-            tab(heading="Battery Health Report")
-              | Three
-            tab(heading="User Usage Report")
-              | Four
-              | {{ display_date }}
+  div#main(ui-view)
+  #angular-templates(ng-non-bindable, style="display: none")
+    #vehicle-details-template
+      div.container-fluid
+        div.row-fluid
+          div.col-lg-3
+            div.panel.panel-default
+              div.panel-heading
+                | Storm Edge
+                div.pull-right(style="position: relative; top: -5px")
+                  button.btn.btn-primary.btn-sm(type="button") Edit
+              div.panel-body
+                img(style="height: 100px")
+                dl
+                  dt Vehicle ID
+                  dd XXX
+                  dt Vehicle Model
+                  dd XXX
+                  dt Battery Model
+                  dd XXX
+                  dt Usage Date
+                  dd XXX
+                  dt Current Status
+                  dd XXX
+          div.col-lg-9
+            div.panel.panel-primary
+              div.panel-heading Dashboard
+              div.panel-body
+                div.row-fluid
+                  div.col-lg-4
+                    div
+                      datepicker(ng-model="display_date")
+                    div.btn-group(style="margin-top: 10px")
+                      div.btn-group
+                        button.btn.btn-info.btn-sm(type="button", ng-click="set_to_today()") Today
+                  div.col-lg-4
+                    div
+                      div Mileage
+                      div Average Energy Consumption
+                      div Daily Mileage
+                      div Daily Energy Consumption
+                      div Average Energy Consumption
+                      div Notes
+                  div.col-lg-4
+                    | Part 3
+            div
+              tabset
+                tab(heading="Vehicle Report")
+                  | One
+                tab(heading="Vehicle Performance Report")
+                  | Two
+                tab(heading="Battery Health Report")
+                  | Three
+                tab(heading="User Usage Report")
+                  | Four
+                  | {{ display_date }}
+    #wrong-url-template
+      div.container-fluid
+        div.row-fluid
+          div.col-lg-12
+            div.alert.alert-danger
+              strong Error!
+              |  Accessing this page directly is not supported.
+              | Please visit 
+              a(href="index.html") the main page
+              |  to select a vehicle to view details for.

@@ -42,70 +42,86 @@
         </div>
       </div>
     </div>
-    <div ng-controller="sbfVehicleDetailsController" class="container-fluid">
-      <div class="row-fluid">
-        <div class="col-lg-3">
-          <div class="panel panel-default">
-            <div class="panel-heading">Storm Edge
-              <div style="position: relative; top: -5px" class="pull-right">
-                <button type="button" class="btn btn-primary btn-sm">Edit</button>
+    <div id="main" ui-view></div>
+    <div id="angular-templates" ng-non-bindable style="display: none">
+      <div id="vehicle-details-template">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-lg-3">
+              <div class="panel panel-default">
+                <div class="panel-heading">Storm Edge
+                  <div style="position: relative; top: -5px" class="pull-right">
+                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                  </div>
+                </div>
+                <div class="panel-body"><img style="height: 100px">
+                  <dl>
+                    <dt>Vehicle ID</dt>
+                    <dd>XXX</dd>
+                    <dt>Vehicle Model</dt>
+                    <dd>XXX</dd>
+                    <dt>Battery Model</dt>
+                    <dd>XXX</dd>
+                    <dt>Usage Date</dt>
+                    <dd>XXX</dd>
+                    <dt>Current Status</dt>
+                    <dd>XXX</dd>
+                  </dl>
+                </div>
               </div>
             </div>
-            <div class="panel-body"><img style="height: 100px">
-              <dl>
-                <dt>Vehicle ID</dt>
-                <dd>XXX</dd>
-                <dt>Vehicle Model</dt>
-                <dd>XXX</dd>
-                <dt>Battery Model</dt>
-                <dd>XXX</dd>
-                <dt>Usage Date</dt>
-                <dd>XXX</dd>
-                <dt>Current Status</dt>
-                <dd>XXX</dd>
-              </dl>
+            <div class="col-lg-9">
+              <div class="panel panel-primary">
+                <div class="panel-heading">Dashboard</div>
+                <div class="panel-body">
+                  <div class="row-fluid">
+                    <div class="col-lg-4">
+                      <div>
+                        <datepicker ng-model="display_date"></datepicker>
+                      </div>
+                      <div style="margin-top: 10px" class="btn-group">
+                        <div class="btn-group">
+                          <button type="button" ng-click="set_to_today()" class="btn btn-info btn-sm">Today</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div>
+                        <div>Mileage</div>
+                        <div>Average Energy Consumption</div>
+                        <div>Daily Mileage</div>
+                        <div>Daily Energy Consumption</div>
+                        <div>Average Energy Consumption</div>
+                        <div>Notes</div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">Part 3</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <tabset>
+                  <tab heading="Vehicle Report">One</tab>
+                  <tab heading="Vehicle Performance Report">Two</tab>
+                  <tab heading="Battery Health Report">Three</tab>
+                  <tab heading="User Usage Report">
+                    Four
+                    {{ display_date }}
+                  </tab>
+                </tabset>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-9">
-          <div class="panel panel-primary">
-            <div class="panel-heading">Dashboard</div>
-            <div class="panel-body">
-              <div class="row-fluid">
-                <div class="col-lg-4">
-                  <div>
-                    <datepicker ng-model="display_date"></datepicker>
-                  </div>
-                  <div style="margin-top: 10px" class="btn-group">
-                    <div class="btn-group">
-                      <button type="button" ng-click="set_to_today()" class="btn btn-info btn-sm">Today</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div>
-                    <div>Mileage</div>
-                    <div>Average Energy Consumption</div>
-                    <div>Daily Mileage</div>
-                    <div>Daily Energy Consumption</div>
-                    <div>Average Energy Consumption</div>
-                    <div>Notes</div>
-                  </div>
-                </div>
-                <div class="col-lg-4">Part 3</div>
+      </div>
+      <div id="wrong-url-template">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-lg-12">
+              <div class="alert alert-danger"><strong>Error!</strong> Accessing this page directly is not supported.
+                Please visit <a href="index.html">the main page</a> to select a vehicle to view details for.
               </div>
             </div>
-          </div>
-          <div>
-            <tabset>
-              <tab heading="Vehicle Report">One</tab>
-              <tab heading="Vehicle Performance Report">Two</tab>
-              <tab heading="Battery Health Report">Three</tab>
-              <tab heading="User Usage Report">
-                Four
-                {{ display_date }}
-              </tab>
-            </tabset>
           </div>
         </div>
       </div>
