@@ -3,4 +3,4 @@
  * @author Yichen Zhao
  * @license Proprietary
  */
-angular.module('SmartBatteryFrontend', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils']);
+angular.module('SmartBatteryFrontend', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils', 'ui.bootstrap', 'ui.router']);

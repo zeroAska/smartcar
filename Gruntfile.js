@@ -74,7 +74,17 @@ module.exports = function(grunt) {
                         dest: 'dist/css/angular-csp.css',
                     }
                 ]
-            }
+            },
+            bootstrap_fonts: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'bower_components/bootstrap/dist',
+                        src: 'fonts/*',
+                        dest: 'dist',
+                    },
+                ],
+            },
         },
         processhtml: {
             options: {

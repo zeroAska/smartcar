@@ -22,6 +22,8 @@
     "bootstrap": "3.3.4",
     "socket.io-client": "0.9.16",
     "google-maps-utility-library-v3": "*",
-    "lodash": "3.8.0"
+    "lodash": "3.8.0",
+    "angular-bootstrap": "~0.13.0",
+    "angular-ui-router": "~0.2.15"
   }
 }

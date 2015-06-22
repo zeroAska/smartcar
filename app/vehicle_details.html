@@ -42,13 +42,13 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid">
+    <div ng-controller="sbfVehicleDetailsController" class="container-fluid">
       <div class="row-fluid">
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <div class="panel panel-default">
             <div class="panel-heading">Storm Edge
               <div style="position: relative; top: -5px" class="pull-right">
-                <button class="btn btn-primary btn-sm">Edit</button>
+                <button type="button" class="btn btn-primary btn-sm">Edit</button>
               </div>
             </div>
             <div class="panel-body"><img style="height: 100px">
@@ -67,24 +67,45 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <div class="panel panel-primary">
             <div class="panel-heading">Dashboard</div>
             <div class="panel-body">
               <div class="row-fluid">
-                <div class="col-md-4">Part 1</div>
-                <div class="col-md-4">Part 2</div>
-                <div class="col-md-4">Part 3</div>
+                <div class="col-lg-4">
+                  <div>
+                    <datepicker ng-model="display_date"></datepicker>
+                  </div>
+                  <div style="margin-top: 10px" class="btn-group">
+                    <div class="btn-group">
+                      <button type="button" ng-click="set_to_today()" class="btn btn-info btn-sm">Today</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div>
+                    <div>Mileage</div>
+                    <div>Average Energy Consumption</div>
+                    <div>Daily Mileage</div>
+                    <div>Daily Energy Consumption</div>
+                    <div>Average Energy Consumption</div>
+                    <div>Notes</div>
+                  </div>
+                </div>
+                <div class="col-lg-4">Part 3</div>
               </div>
             </div>
           </div>
           <div>
-            <ul role="tablist" class="nav nav-tabs">
-              <li role="presentation"><a>One</a></li>
-              <li role="presentation"><a>Two</a></li>
-              <li role="presentation"><a>Three</a></li>
-            </ul>
-            <div class="tab-content"></div>
+            <tabset>
+              <tab heading="Vehicle Report">One</tab>
+              <tab heading="Vehicle Performance Report">Two</tab>
+              <tab heading="Battery Health Report">Three</tab>
+              <tab heading="User Usage Report">
+                Four
+                {{ display_date }}
+              </tab>
+            </tabset>
           </div>
         </div>
       </div>
@@ -99,6 +120,8 @@
       <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.js"></script>
       <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.js"></script>
       <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.js"></script>
+      <script language="javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script language="javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <!-- endbuild -->
       <!-- process:[src] js/app.min.js -->
       <script language="javascript" type="text/javascript" src="js/app.js"></script>
