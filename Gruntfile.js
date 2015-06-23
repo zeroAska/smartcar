@@ -137,12 +137,21 @@ module.exports = function(grunt) {
         },
         watch: {
             default: {
-                files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/imgs/**'],
+                files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/**/*.less', 'app/imgs/**'],
                 tasks: 'default',
                 options: {
                     livereload: true,
                 },
             },
+        },
+        less: {
+            bootstrap: {
+                options: {
+                    strictMath: true,
+                },
+                src: 'app/css/bootstrap/less/bootstrap.less',
+                dest: 'app/css/bootstrap.css',
+            }
         },
     });
 
@@ -158,5 +167,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jade');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.registerTask('default', ['jshint', 'jade', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.registerTask('default', ['jshint', 'jade', 'less', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };
