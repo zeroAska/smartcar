@@ -22,8 +22,8 @@ block body
                 div.navbar-text
                   = '<User> <Image>'
   div#main(ui-view)
-  #angular-templates(ng-non-bindable, style="display: none")
-    #vehicle-details-template
+  #angular-templates(style="display: none")
+    script(type="text/ng-template", id="pages/vehicle_details.html")
       div.container-fluid
         div.row-fluid
           div.col-lg-3
@@ -33,7 +33,7 @@ block body
                 div.pull-right(style="position: relative; top: -5px")
                   button.btn.btn-primary.btn-sm(type="button") Edit
               div.panel-body
-                img(style="height: 100px")
+                img.img-responsive(src="http://images.dealer.com/autodata/us/640/color/2015/USC50TOS071A0/218.jpg")
                 dl
                   dt Vehicle ID
                   dd XXX
@@ -77,14 +77,16 @@ block body
             div
               tabset
                 tab(heading="Vehicle Report")
-                  | One
+                  div.row-fluid
+                    div.col-lg-12
+                      | One
                 tab(heading="Vehicle Performance Report")
                   | Two
                 tab(heading="Battery Health Report")
                   | Three
                 tab(heading="User Usage Report")
                   | Four
-    #wrong-url-template
+    script(type="text/ng-template", id="pages/wrong_url.html")
       div.container-fluid
         div.row-fluid
           div.col-lg-12

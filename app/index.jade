@@ -25,8 +25,8 @@ block body
       <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
       <!-- /process -->
 
-  div#angular-templates(ng-non-bindable, style="display: none")
-    div#marker-label
+  div#angular-templates(style="display: none")
+    script(type='text/ng-template', id='partials/vehicle_marker_label.html')
       div
         div.ani-fade(style="width: 70px", ng-if="vec!==active_marker")
           div(style="position: relative")
@@ -37,7 +37,7 @@ block body
             div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOH
             div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
               div(iau-colored-progress, ratio="vec.data.state_of_health",progressbreaks="progress_breaks")
-    div#vehicle-info-window
+    script(type='text/ng-template', id='partials/vehicle_info_window.html')
       div
         div(ng-if="active_marker",style="width: 180px")
           strong {{ active_marker.title }}

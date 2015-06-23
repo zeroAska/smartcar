@@ -17,16 +17,15 @@ angular.module('sbfModuleVehiclesMap')
     },
     gmaps_load_timeout: 10000
 })
-.factory('sbfVMC$Tools', function($log, $compile) {
+.factory('sbfVMC$Tools', function($log, $compile, $templateCache, $http) {
     return {
         compile_and_link: function(template, scope) {
             var template_element;
             if (typeof template == 'string') {
-                if (template[0] === '#') {
-                    template_element = angular.element(template).children().clone();
-                } else {
-                    template_element = angular.element(template);
-                }
+                // templates specified in this way must have been pre-cached,
+                // via script(type="text/ng-template"), or other means (like a
+                // factory provider, for example)
+                template_element = angular.element($templateCache.get(template));
             } else {
                 template_element = template.clone();
             }
@@ -106,7 +105,7 @@ angular.module('sbfModuleVehiclesMap')
         this.scope = $scope.$new();
         this.scope.vec = data;
         this.scope.progress_breaks = sbfVMC$Options.progress_breaks;
-        this._element = sbfVMC$Tools.compile_and_link('#marker-label', this.scope);
+        this._element = sbfVMC$Tools.compile_and_link('partials/vehicle_marker_label.html', this.scope);
         this.marker.set('labelContent', this._element[0]);
         this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
         this.scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
@@ -232,7 +231,7 @@ angular.module('sbfModuleVehiclesMap')
         $log.log($scope.gmap);
 
         $scope.vehicle_info_window = new google.maps.InfoWindow();
-        var te = sbfVMC$Tools.compile_and_link('#vehicle-info-window', $scope);
+        var te = sbfVMC$Tools.compile_and_link('partials/vehicle_info_window.html', $scope);
         $log.log(te);
         $scope.vehicle_info_window.setContent(te[0]);
 

@@ -9,11 +9,11 @@ angular.module('sbfModuleVehicleDetails', ['ngResource', 'chart.js', 'ngAnimate'
     $stateProvider
         .state('wrong_url', {
             url: '/wrong_url',
-            template: angular.element('#wrong-url-template').html(),
+            templateUrl: 'pages/wrong_url.html',
         })
         .state('vehicle_details', {
             url: '/vehicle_details/{vehicle_id}',
-            template: angular.element('#vehicle-details-template').html(),
+            templateUrl: 'pages/vehicle_details.html',
             controller: 'sbfVehicleDetailsController'
         })
     ;

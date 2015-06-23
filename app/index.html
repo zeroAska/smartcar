@@ -42,8 +42,8 @@
         <!-- /process -->
       </div>
     </div>
-    <div id="angular-templates" ng-non-bindable style="display: none">
-      <div id="marker-label">
+    <div id="angular-templates" style="display: none">
+      <script type="text/ng-template" id="partials/vehicle_marker_label.html">
         <div>
           <div style="width: 70px" ng-if="vec!==active_marker" class="ani-fade">
             <div style="position: relative">
@@ -60,8 +60,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div id="vehicle-info-window">
+      </script>
+      <script type="text/ng-template" id="partials/vehicle_info_window.html">
         <div>
           <div ng-if="active_marker" style="width: 180px"><strong>{{ active_marker.title }}</strong>
             <dl>
@@ -81,7 +81,7 @@
             <div><a href="vehicle_details.html#/vehicle_details/{{ active_marker.vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
           </div>
         </div>
-      </div>
+      </script>
     </div>
     <div class="script-block">
       <!-- build:js js/plugins.min.js -->
