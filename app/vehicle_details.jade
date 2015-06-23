@@ -4,7 +4,7 @@ block variables
   - var page_module = 'sbfModuleVehicleDetails'
 block body
   div.container-fluid
-    div.row-fluid
+    div.row
       div.col-md-12
         nav.navbar.navbar-default
           div.container-fluid
@@ -25,7 +25,7 @@ block body
   #angular-templates(style="display: none")
     script(type="text/ng-template", id="pages/vehicle_details.html")
       div.container-fluid
-        div.row-fluid
+        div.row
           div.col-lg-3
             div.panel.panel-default
               div.panel-heading
@@ -49,7 +49,7 @@ block body
             div.panel.panel-primary
               div.panel-heading Dashboard
               div.panel-body
-                div.row-fluid
+                div.row
                   div.col-lg-4
                     div
                       datepicker(ng-model="display_date")
@@ -75,20 +75,26 @@ block body
                       div SOC
                       div SOH
             div
-              tabset
+              tabset.nav-tab-wrapped
                 tab(heading="Vehicle Report")
-                  div.row-fluid
-                    div.col-lg-12
-                      | One
+                  div.row
+                    div.col-lg-6
+                      img.img-responsive(src="http://www.car-illustration.com/illustrations/top-view-suv-frame-chassis.jpg")
+                    div.col-lg-6
+                      ul.list-group
+                        li.list-group-item(ng-repeat="component in components", ng-class="{ 'list-group-item-success': component.success, 'list-group-item-danger': component.error, 'list-group-item-warning': component.warning }") {{ component.name }}
                 tab(heading="Vehicle Performance Report")
-                  | Two
+                  div.row
+                    div.col-lg-6
+                      canvas.lines.chart.chart-line(data="active_marker.charts.data", labels="active_marker.charts.labels", legend="true", series="active_marker.charts.series", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}")
+                    div.col-lg-6
                 tab(heading="Battery Health Report")
                   | Three
                 tab(heading="User Usage Report")
                   | Four
     script(type="text/ng-template", id="pages/wrong_url.html")
       div.container-fluid
-        div.row-fluid
+        div.row
           div.col-lg-12
             div.alert.alert-danger
               strong Error!

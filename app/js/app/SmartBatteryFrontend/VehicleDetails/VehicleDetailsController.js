@@ -17,5 +17,12 @@ angular.module('sbfModuleVehicleDetails')
             $scope.battery_ratio = 0;
         }
     }, 1000);
+
+    $scope.components = [
+        { name: 'Engine', success: true},
+        { name: 'Steering', success: true},
+        { name: 'Braking', warning: true },
+        { name: 'Lighting', error: true },
+    ];
 })
 ;

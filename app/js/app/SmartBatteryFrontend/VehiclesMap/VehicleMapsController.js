@@ -217,6 +217,10 @@ angular.module('sbfModuleVehiclesMap')
         $log.log('starting update');
         $scope.socket = io.connect(window.location.protocol + '//' + window.location.host + '/test');
         $scope.socket.on('vehicle_update', handle_vehicle_update);
+
+        $scope.$on('$destroy', function() {
+            $scope.socket.disconnect();
+        });
     }
 
     function load_maps() {
@@ -247,6 +251,13 @@ angular.module('sbfModuleVehiclesMap')
             $scope.$apply(function() {
                 $scope.active_marker = null;
             });
+        });
+
+        $scope.$on('$destroy', function() {
+            _.forEach($scope.map_marker_dict, function(marker, key) {
+                marker.close();
+            });
+            $scope.map_marker_dict = null;
         });
     }
 
