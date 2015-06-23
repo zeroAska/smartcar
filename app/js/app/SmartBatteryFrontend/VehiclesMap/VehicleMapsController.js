@@ -262,19 +262,6 @@ angular.module('sbfModuleVehiclesMap')
         $scope.gmaps_load_failed = true;
     }, sbfVMC$Options.gmaps_load_timeout);
 })
-
-// XXX extract below by necessity
-.directive('sbfColoredProgress', function() {
-    return {
-        template: "<div ng-class=\"{'progress-bar': true, 'progress-bar-success': value >= progress_breaks[1], 'progress-bar-warning': value >= progress_breaks[0] && value < progress_breaks[1], 'progress-bar-danger': value < progress_breaks[0]}\" ng-style=\"{width: value * 100 + '%'}\"></div>",
-        restrict: 'AE',
-        replace: true,
-        scope: {
-            value: '=value',
-            progress_breaks: '=progressbreaks',
-        }
-    };
-})
 .filter('latlngcoords', function() {
     return function(input) {
         return Math.floor(input) + '\u00b0 ' + Math.floor((input % 1) * 60) + "' " +

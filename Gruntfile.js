@@ -148,6 +148,7 @@ module.exports = function(grunt) {
             bootstrap: {
                 options: {
                     strictMath: true,
+                    // Add plugin for prefixing
                 },
                 src: 'app/css/bootstrap/less/bootstrap.less',
                 dest: 'app/css/bootstrap.css',

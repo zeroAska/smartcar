@@ -80,3 +80,22 @@
 .ani-fade.ng-leave.ng-leave-active {
     opacity:0;
 }
+
+/* Vehicle Details page Battery Icon */
+.battery-progress-icon-vertical {
+    border: solid 2px black;
+    border-radius: 6px;
+    position: relative;
+    margin-top: 4px;
+}
+
+.battery-progress-icon-vertical .battery-tab {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    margin-left: -15px;
+    background-color: black;
+    width: 30px;
+    height: 4px;
+    border-radius: 4px 4px 0 0;
+}

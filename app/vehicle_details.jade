@@ -65,13 +65,15 @@ block body
                       div Average Energy Consumption
                       div Notes
                   div.col-lg-4.clearfix
-                    div.pull-left
-                      div(style="border: solid 2px black; border-radius: 6px; position: relative; margin-top: 14px;")
-                        div(style="position: absolute; top: -10px; left: 50%; margin-left: -15px; background-color: black; width: 30px; height: 4px; ")
-                        div.progress.vertical(style="margin: 0; width: 60px; height: 200px")
-                          div.progress-bar.vertical-bottom(style="height: 30%;")
+                    div.pull-left(style="margin-right: 15px; margin-top: 5px;")
+                      div.battery-progress-icon-vertical
+                        div.battery-tab
+                        div.progress.vertical(style="margin: 0; width: 80px; height: 200px")
+                          div.progress-bar.vertical-bottom(iau-colored-progress, ratio="battery_ratio", vertical)
                     div
-                      | Vehicle Information
+                      div Refresh Time
+                      div SOC
+                      div SOH
             div
               tabset
                 tab(heading="Vehicle Report")
