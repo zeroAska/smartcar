@@ -46,6 +46,23 @@
   .transition(width .6s ease);
 }
 
+// Vertical mode
+.progress.vertical {
+    position: relative;
+
+    .progress-bar {
+        width: 100%;
+        height: 0%;
+        .transition(height .6s ease);
+    }
+
+    .progress-bar.vertical-bottom {
+        position: absolute;
+        bottom: 0;
+    }
+}
+
+
 // Striped bars
 //
 // `.progress-striped .progress-bar` is deprecated as of v3.2.0 in favor of the
