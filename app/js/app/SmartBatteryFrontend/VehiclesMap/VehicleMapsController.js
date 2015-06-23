@@ -40,13 +40,21 @@ angular.module('sbfModuleVehiclesMap')
             var dest_coord = null;
             var animation_counter = 0;
             var final_counter = -1;
+            var setTimeout = window.setTimeout;
+            var clearTimeout = window.clearTimeout;
             if (!step_time) {
-                step_time = 10;  // 24fps
+                if (window.requestAnimationFrame && window.cancelAnimationFrame) {
+                    setTimeout = window.requestAnimationFrame;
+                    clearTimeout = window.cancelAnimationFrame;
+                    step_time = 1000 / 60;
+                } else {
+                    step_time = 10;
+                }
             }
 
             function cancel() {
                 if (timer) {
-                    window.clearInterval(timer);
+                    clearTimeout(timer);
                 }
                 timer = null;
                 source_coord = null;
@@ -56,9 +64,10 @@ angular.module('sbfModuleVehiclesMap')
             }
 
             function start() {
-                timer = window.setInterval(animation_step, step_time);
+                timer = setTimeout(animation_step, step_time);
             }
             function animation_step() {
+                timer = null;
                 if (animation_counter < final_counter) {
                     var interp_coord = {
                         lat: source_coord.lat + (dest_coord.lat - source_coord.lat) * (animation_counter + 1) / final_counter,
@@ -70,6 +79,8 @@ angular.module('sbfModuleVehiclesMap')
                 if (animation_counter >= final_counter) {
                     marker.setPosition(dest_coord);
                     cancel();
+                } else {
+                    start();
                 }
             }
             this.cancel = cancel;

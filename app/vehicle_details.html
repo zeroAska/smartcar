@@ -125,10 +125,12 @@
                       </div>
                     </div>
                   </tab>
-                  <tab heading="Vehicle Performance Report">
+                  <tab heading="Vehicle Performance Report" active="_v.performance_chart_active">
                     <div class="row">
                       <div class="col-lg-6">
-                        <canvas data="active_marker.charts.data" labels="active_marker.charts.labels" legend="true" series="active_marker.charts.series" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" class="lines chart chart-line"></canvas>
+                        <div ng-if="_v.performance_chart_active_delayed" style="max-height: 400px">
+                          <canvas data="vehicle.performance_chart.data" labels="vehicle.performance_chart.labels" legend="true" series="vehicle.performance_chart.series" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" class="chart chart-line"></canvas>
+                        </div>
                       </div>
                       <div class="col-lg-6"></div>
                     </div>
