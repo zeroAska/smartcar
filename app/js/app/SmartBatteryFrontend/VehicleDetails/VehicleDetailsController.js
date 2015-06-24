@@ -33,17 +33,12 @@ angular.module('sbfModuleVehicleDetails')
         [28, 48 * Math.random(), 40, 19, 86, 27, 90]
     ];
 
-    $scope._v = {performance_chart_active: false};
-    $scope.$watch('_v.performance_chart_active', function(active, old_active) {
-        if (active !== old_active) {
-            window.requestAnimationFrame(function() {
-                $scope.$apply(
-                    function() {
-                        $log.log(active);
-                        $scope._v.performance_chart_active_delayed = active;
-                    }, 100);
-            });
-        }
-    });
+    $scope.chart_once_delayed = function(fn) {
+        $timeout(function() {
+            fn();
+            $scope.vehicle.performance_chart.data[0][0] = 0;
+        }, 100);
+        $scope.chart_once_delay = null;
+    };
 })
 ;

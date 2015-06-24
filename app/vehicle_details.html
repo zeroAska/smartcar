@@ -125,11 +125,11 @@
                       </div>
                     </div>
                   </tab>
-                  <tab heading="Vehicle Performance Report" active="_v.performance_chart_active">
+                  <tab heading="Vehicle Performance Report" select="chart_once_delayed(resize_chart)">
                     <div class="row">
                       <div class="col-lg-6">
-                        <div ng-if="_v.performance_chart_active_delayed" style="max-height: 400px">
-                          <canvas data="vehicle.performance_chart.data" labels="vehicle.performance_chart.labels" legend="true" series="vehicle.performance_chart.series" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" class="chart chart-line"></canvas>
+                        <div style="max-height: 400px">
+                          <canvas data="vehicle.performance_chart.data" labels="vehicle.performance_chart.labels" legend="true" series="vehicle.performance_chart.series" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" aspect-ratio="2" do-resize="resize_chart" class="chart chart-line"></canvas>
                         </div>
                       </div>
                       <div class="col-lg-6"></div>
