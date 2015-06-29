@@ -90,7 +90,6 @@
           legend: '@',
           click: '=',
           hover: '=',
-          aspectRatio: '=?',
           doResize: '=?',
         },
         link: function (scope, elem/*, attrs */) {
@@ -181,9 +180,6 @@
         getData(scope.labels, scope.data, scope.colours);
       var options = angular.extend({}, ChartJs.getOptions(type), scope.options);
       var chart = new ChartJs.Chart(ctx)[type](data, options);
-      if (scope.aspectRatio) {
-        chart.chart.aspectRatio = scope.aspectRatio;
-      }
       scope.$emit('create', chart);
 
       ['hover', 'click'].forEach(function (action) {
