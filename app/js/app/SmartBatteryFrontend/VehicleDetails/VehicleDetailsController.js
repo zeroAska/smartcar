@@ -33,6 +33,12 @@ angular.module('sbfModuleVehicleDetails')
         [28, 48 * Math.random(), 40, 19, 86, 27, 90]
     ];
 
+    $interval(function() {
+        _.forEach($scope.vehicle.performance_chart.data[0], function(_, i) {
+            $scope.vehicle.performance_chart.data[0][i] = 100 * Math.random();
+        });
+    }, 1000.0);
+
     $scope.chart_once_delayed = function(fn) {
         $timeout(function() {
             fn();

@@ -137,8 +137,8 @@ module.exports = function(grunt) {
         },
         watch: {
             default: {
-                files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/**/*.less', 'app/imgs/**'],
-                tasks: 'default',
+                files: ['app/**/*.jade', 'app/**/*.js', 'app/**/*.css', 'app/**/*.less', 'app/imgs/**', '!app/js/app.js'],
+                tasks: 'dev',
                 options: {
                     livereload: true,
                 },
@@ -169,5 +169,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jade');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.registerTask('default', ['jshint', 'jade', 'less', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
+    grunt.registerTask('dev', ['jshint', 'jade', 'less', 'concat:app']);
+    grunt.registerTask('default', ['dev', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };

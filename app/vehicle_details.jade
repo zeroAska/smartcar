@@ -87,7 +87,7 @@ block body
                   div.row
                     div.col-lg-6
                       div(style="max-height: 400px")
-                        canvas.chart.chart-line(data="vehicle.performance_chart.data", labels="vehicle.performance_chart.labels", legend="true", series="vehicle.performance_chart.series", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}", aspect-ratio="2", do-resize="resize_chart")
+                        canvas.chart.chart-line(data="vehicle.performance_chart.data", labels="vehicle.performance_chart.labels", legend="true", series="vehicle.performance_chart.series", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}", do-resize="resize_chart")
                     div.col-lg-6
                 tab(heading="Battery Health Report")
                   | Three
