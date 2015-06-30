@@ -29,9 +29,10 @@ angular.module('sbfModuleCommon')
             }
             if (cached_map) {
                 $log.log('using cached map', cached_map);
-                cached_map.instance.setOptions($scope.$eval($attrs.options));
                 $element.empty();
                 $element.append(cached_map.container);
+                google.maps.event.trigger(cached_map.instance, 'resize');
+                cached_map.instance.setOptions($scope.$eval($attrs.options));
             } else {
                 $log.log('creating new map');
                 cached_map = {};

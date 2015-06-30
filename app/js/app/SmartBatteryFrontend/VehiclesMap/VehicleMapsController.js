@@ -131,6 +131,7 @@ angular.module('sbfModuleVehiclesMap')
 
         $scope.$on('$destroy', function() {
             $scope.socket.disconnect();
+            $scope.socket.socket.disconnect(); // what sort of bug is this?!
         });
     }
 
@@ -159,19 +160,18 @@ angular.module('sbfModuleVehiclesMap')
                     }
                 });
 
-                function closeclick() {
+
+                var closelistener = google.maps.event.addListener(vehicle_info_window, 'closeclick', function () {
                     $scope.$apply(function() {
                         $scope.marker_data.active_vehicle = null;
                     });
-                }
-
-                google.maps.event.addListener(vehicle_info_window, 'closeclick', closeclick);
+                });
 
                 scope.$on('$destroy', function() {
+                    google.maps.event.removeListener(closelistener);
                     vehicle_info_window.close();
                     vehicle_info_window.setContent(null);
                     window_content.remove();
-                    google.maps.event.removeListener(closeclick);
                 });
             });
         }
