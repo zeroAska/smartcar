@@ -83,12 +83,13 @@ block body
                     div.col-lg-6
                       ul.list-group
                         li.list-group-item(ng-repeat="component in components", ng-class="{ 'list-group-item-success': component.success, 'list-group-item-danger': component.error, 'list-group-item-warning': component.warning }") {{ component.name }}
-                tab(heading="Vehicle Performance Report", select="chart_once_delayed(resize_chart)")
+                tab(heading="Vehicle Performance Report", select="chart_once_delayed(resize_chart)", active="complex_active")
                   div.row
                     div.col-lg-6
                       div(style="max-height: 400px")
                         canvas.chart.chart-line(data="vehicle.performance_chart.data", labels="vehicle.performance_chart.labels", legend="true", series="vehicle.performance_chart.series", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}", do-resize="resize_chart")
                     div.col-lg-6
+                      div(style="position: relative; height: 400px", sbf-google-maps, ng-if="gmaps_loaded_all && complex_active", gmaps="maps_data.gmaps", options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }")
                 tab(heading="Battery Health Report")
                   | Three
                 tab(heading="User Usage Report")
