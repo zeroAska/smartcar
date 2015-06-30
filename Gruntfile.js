@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         uglify: {
             app: {
                 files: {
-                    'dist/js/app.min.js': '.tmp/ngAnnotate/app.js',
+                    'dist/js/app.min.js': ['.tmp/ngAnnotate/app.js', '.tmp/ngtemplates/templates.js'],
                 },
             },
             main: {
@@ -154,6 +154,13 @@ module.exports = function(grunt) {
                 dest: 'app/css/bootstrap.css',
             }
         },
+        ngtemplates: {
+            sbfModuleTemplates: {
+                cwd: 'app',
+                src: 'pages/*.html',
+                dest: '.tmp/ngtemplates/templates.js',
+            }
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -169,6 +176,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jade');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-angular-templates');
     grunt.registerTask('dev', ['jshint', 'jade', 'less', 'concat:app']);
-    grunt.registerTask('default', ['dev', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
+    grunt.registerTask('default', ['dev', 'ngtemplates', 'useminPrepare', 'processhtml', 'newer:concat', 'newer:ngAnnotate', 'newer:uglify', 'newer:cssmin', 'usemin', 'copy']);
 };

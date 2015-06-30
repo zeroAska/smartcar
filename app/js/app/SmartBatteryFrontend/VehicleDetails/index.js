@@ -3,7 +3,8 @@
  * @author Yichen Zhao
  * @license Proprietary
  */
-angular.module('sbfModuleVehicleDetails', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils', 'ui.bootstrap', 'ui.router', 'sbfModuleCommon', 'sbfModuleVehiclesMap'])
+angular.module('sbfModuleTemplates', []);
+angular.module('sbfModuleVehicleDetails', ['ngResource', 'chart.js', 'ngAnimate', 'iaUtils', 'ui.bootstrap', 'ui.router', 'sbfModuleCommon', 'sbfModuleVehiclesMap', 'sbfModuleTemplates'])
 .config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/wrong_url');
     $stateProvider
