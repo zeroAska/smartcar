@@ -99,7 +99,7 @@ angular.module('sbfModuleVehiclesMap')
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_marker_dict = {};
-    $scope.vehicles = [];
+    $scope.vehicles = {};
     $scope.gmap = null;
     $scope.marker_data = {};
     $scope.ready = false;
