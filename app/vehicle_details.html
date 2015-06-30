@@ -171,6 +171,10 @@
       <!-- process:[src] js/app.min.js -->
       <script language="javascript" type="text/javascript" src="js/app.js"></script>
       <!-- /process -->
+      <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
+      <!-- process:[src] js/markerwithlabel.min.js -->
+      <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-error="gmaps_load_failed=true" loaded="gmaps_loaded_all"></iau-script>
+      <!-- /process -->
     </div>
   </body>
 </html>
