@@ -99,70 +99,21 @@ angular.module('sbfModuleVehiclesMap')
     var dummy_vehc = {latitude: 31.0268809, longitude: 121.4367119 };
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_marker_dict = {};
+    $scope.vehicles = [];
     $scope.gmap = null;
-    $scope.active_marker = null;
+    $scope.marker_data = {};
     $scope.ready = false;
 
-
-    function MapMarker($scope, data, map) {
-        var self = this;
-        this.data = data;
-        this.marker = new MarkerWithLabel({
-            position: new google.maps.LatLng(data.latitude, data.longitude),
-            map: map,
-            icon: sbfVMC$Options.default_icon,
-            labelAnchor: new google.maps.Point(20, 40)
-        });
-        this.scope = $scope.$new();
-        this.scope.vec = data;
-        this.scope.progress_breaks = sbfVMC$Options.progress_breaks;
-        this._element = sbfVMC$Tools.compile_and_link('partials/vehicle_marker_label.html', this.scope);
-        this.marker.set('labelContent', this._element[0]);
-        this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
-        this.scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
-            // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
-            self.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
-        });
-
-        this.listeners = [];
-        this.destructors = [];
-    }
-
-    MapMarker.prototype.click = function(callback) {
-        var listn = google.maps.event.addListener(this.marker, 'click', callback);
-        this.listeners.push(listn);
-        return listn;
-    };
-
-    MapMarker.prototype.close = function() {
-        _.forEach(this.listeners, function(listener) {
-            google.maps.event.removeListener(listener);
-        });
-        _.forEach(this.destructors, function(destr) {
-            destr();
-        });
-        this.slider.cancel();
-        this.marker.setMap(null);
-        this._element.remove();
-        this.scope.$destroy();
-    };
-
-    MapMarker.prototype.register_destructor = function(destr) {
-        this.destructors.push(destr);
-    };
-
     function handle_vehicle_update(data) {
-        $log.log(data);
         $q(function(resolve) {
             if (data.type != 'vehicle_status') {
                 throw new Error('Invalid data type received');
             }
 
 
-            var old_keys = _.object(_.keys($scope.map_marker_dict));
             var dataset = data.vehicles;
-            _.forEach(dataset, function(veh) {
-                delete old_keys[veh.vehicle_id];
+            var datadict = {};
+            dataset = _.forEach(dataset, function(veh) {
                 var new_set = {
                     vehicle_id: veh.vehicle_id,
                     longitude: veh.longitude,
@@ -178,44 +129,9 @@ angular.module('sbfModuleVehiclesMap')
                     [65, 59, 80, 81, 56, 55, 40],
                     [28, 48 * Math.random(), 40, 19, 86, 27, 90]
                 ];
-                if (!$scope.map_marker_dict[veh.vehicle_id]) {
-                    var map_marker = new MapMarker($scope, new_set, $scope.gmap);
-                    $scope.map_marker_dict[veh.vehicle_id] = map_marker;
-                    new_set.show = false;
-                    new_set.options = {};
-
-                    map_marker.click(function() {
-                        $scope.$apply(function() {
-                            if ($scope.active_marker === new_set) {
-                                $scope.active_marker = null;
-                            } else {
-                                $scope.active_marker = new_set;
-                            }
-                        });
-                    });
-                    map_marker.register_destructor(
-                        $scope.$watch('active_marker', function(amarker) {
-                            if (amarker === new_set) {
-                                map_marker.marker.setIcon(sbfVMC$Options.active_icon);
-                            } else {
-                                map_marker.marker.setIcon(sbfVMC$Options.default_icon);
-                            }
-                        })
-                    );
-                } else {
-                    _.extend($scope.map_marker_dict[veh.vehicle_id].data, new_set);
-                }
+                datadict[veh.vehicle_id] = new_set;
             });
-            _.keys(old_keys).forEach(function(vehicle_id) {
-                if ($scope.map_marker_dict[vehicle_id]) {
-                    var marker = $scope.map_marker_dict[vehicle_id];
-                    delete $scope.map_marker_dict[vehicle_id];
-                    if (marker.data === $scope.active_marker) {
-                        $scope.active_marker = null;
-                    }
-                    marker.close();
-                }
-            });
+            $scope.vehicles = datadict;
             resolve();
         })
         .catch(function(e) {
@@ -250,9 +166,9 @@ angular.module('sbfModuleVehiclesMap')
         $log.log(te);
         $scope.vehicle_info_window.setContent(te[0]);
 
-        $scope.$watch('active_marker', function(active_marker) {
-            if (active_marker) {
-                $scope.vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_marker.vehicle_id].marker);
+        $scope.$watch('marker_data.active_vehicle', function(active_vehicle) {
+            if (active_vehicle != null) {
+                $scope.vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_vehicle].marker);
             } else {
                 $scope.vehicle_info_window.close();
             }
@@ -260,14 +176,11 @@ angular.module('sbfModuleVehiclesMap')
 
         google.maps.event.addListener($scope.vehicle_info_window, 'closeclick', function() {
             $scope.$apply(function() {
-                $scope.active_marker = null;
+                $scope.marker_data.active_vehicle = null;
             });
         });
 
         $scope.$on('$destroy', function() {
-            _.forEach($scope.map_marker_dict, function(marker, key) {
-                marker.close();
-            });
             $scope.map_marker_dict = null;
         });
     }
@@ -282,6 +195,89 @@ angular.module('sbfModuleVehiclesMap')
     var gmaps_load_timeout = $timeout(function() {
         $scope.gmaps_load_failed = true;
     }, sbfVMC$Options.gmaps_load_timeout);
+})
+.directive('sbfVmcVehicleMarker', function($log, sbfVMC$Options, sbfVMC$Tools) {
+    /**
+     * @remarks Private use directive, assumes existing scope variables,
+     * has implicit dependencies on global state, etc etc...
+     *
+     * Use ng-repeat to simplify management and boost compile performance
+     * with transclude
+     */
+    function MapMarker($scope, data, map, element) {
+        var self = this;
+        this.data = data;
+        this.marker = new MarkerWithLabel({
+            position: new google.maps.LatLng(data.latitude, data.longitude),
+            map: map,
+            icon: sbfVMC$Options.default_icon,
+            labelAnchor: new google.maps.Point(20, 40)
+        });
+        $scope.progress_breaks = sbfVMC$Options.progress_breaks;
+        this._element = element;
+        this.marker.set('labelContent', this._element[0]);
+        this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
+        $scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
+            // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
+            self.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
+        });
+
+        this.listeners = [];
+    }
+
+    MapMarker.prototype.click = function(callback) {
+        var listn = google.maps.event.addListener(this.marker, 'click', callback);
+        this.listeners.push(listn);
+        return listn;
+    };
+
+    MapMarker.prototype.close = function() {
+        _.forEach(this.listeners, function(listener) {
+            google.maps.event.removeListener(listener);
+        });
+        this.slider.cancel();
+        this.marker.setMap(null);
+        this.marker.set('labelContent', null);
+        this._element.remove();
+    };
+
+    return {
+        restrict: 'E',
+        transclude: true,
+        link: function($scope, $element, $attrs, $controller, $transclude) {
+            $transclude($scope, function(cloned, scope) {
+                var container = angular.element('<div>');
+                container.append(cloned);
+                var marker = new MapMarker(scope, scope.vec, scope.gmap, container);
+                var vehicle_id = scope.vec.vehicle_id;
+                marker.click(function() {
+                    scope.$apply(function() {
+                        if (scope.marker_data.active_vehicle === scope.vec.vehicle_id) {
+                            scope.marker_data.active_vehicle = null;
+                        } else {
+                            scope.marker_data.active_vehicle = scope.vec.vehicle_id;
+                        }
+                    });
+                });
+
+                scope.$watch('marker_data.active_vehicle', function(vehicle_id) {
+                    if (vehicle_id === scope.vec.vehicle_id) {
+                        marker.marker.setIcon(sbfVMC$Options.active_icon);
+                    } else {
+                        marker.marker.setIcon(sbfVMC$Options.default_icon);
+                    }
+                });
+
+                scope.map_marker_dict[vehicle_id] = marker;
+
+                scope.$on('$destroy', function() {
+                    scope.marker_data.active_vehicle = null;
+                    marker.close();
+                    delete scope.map_marker_dict[vehicle_id];
+                });
+            });
+        }
+    };
 })
 .filter('latlngcoords', function() {
     return function(input) {

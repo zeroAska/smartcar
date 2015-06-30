@@ -21,10 +21,10 @@
       <div id="map-canvas" class="google-map-canvas">
         <div class="google-map-container"></div>
       </div>
-      <div id="vehicle-graphs" ng-if="active_marker" class="ani-fade">
+      <div id="vehicle-graphs" ng-if="marker_data.active_vehicle != null" class="ani-fade">
         <div class="vehicle-graph">
           <div>
-            <canvas data="active_marker.charts.data" labels="active_marker.charts.labels" legend="true" series="active_marker.charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" class="lines chart chart-line"></canvas>
+            <canvas data="vehicles[marker_data.active_vehicle].charts.data" labels="vehicles[marker_data.active_vehicle].charts.labels" legend="true" series="vehicles[marker_data.active_vehicle].charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true, animation: false}" class="lines chart chart-line"></canvas>
           </div>
         </div>
       </div>
@@ -35,6 +35,28 @@
           <Loading>Failed! Maybe you don't have access to Google Maps</Loading>
         </div>
       </div>
+      <iau-behavior>
+        <div ng-if="gmap">
+          <sbf-vmc-vehicle-marker ng-repeat="vec in vehicles track by vec.vehicle_id" vec="vec" marker="map_marker_dict[vec.vehicle_id]">
+            <div>
+              <div style="width: 70px" ng-if="vec.vehicle_id!==marker_data.active_vehicle" class="ani-fade">
+                <div style="position: relative">
+                  <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
+                  <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
+                    <div iau-colored-progress ratio="vec.data.state_of_charge" progressbreaks="progress_breaks"></div>
+                  </div>
+                </div>
+                <div style="position: relative">
+                  <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
+                  <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
+                    <div iau-colored-progress ratio="vec.data.state_of_health" progressbreaks="progress_breaks"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sbf-vmc-vehicle-marker>
+        </div>
+      </iau-behavior>
       <div class="script-block">
         <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
         <!-- process:[src] js/markerwithlabel.min.js -->
@@ -43,42 +65,24 @@
       </div>
     </div>
     <div id="angular-templates" style="display: none">
-      <script type="text/ng-template" id="partials/vehicle_marker_label.html">
-        <div>
-          <div style="width: 70px" ng-if="vec!==active_marker" class="ani-fade">
-            <div style="position: relative">
-              <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
-              <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
-                <div iau-colored-progress ratio="vec.data.state_of_charge" progressbreaks="progress_breaks"></div>
-              </div>
-            </div>
-            <div style="position: relative">
-              <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
-              <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
-                <div iau-colored-progress ratio="vec.data.state_of_health" progressbreaks="progress_breaks"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </script>
       <script type="text/ng-template" id="partials/vehicle_info_window.html">
         <div>
-          <div ng-if="active_marker" style="width: 180px"><strong>{{ active_marker.title }}</strong>
+          <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
             <dl>
               <dt>Model</dt>
               <dd>N/A</dd>
               <dt>Bat Type/#</dt>
               <dd>N/A</dd>
               <dt>SOC</dt>
-              <dd>{{ (active_marker.data.state_of_charge * 100).toFixed(2) }}%</dd>
+              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%</dd>
               <dt>SOH</dt>
-              <dd>{{ (active_marker.data.state_of_health * 100).toFixed(2) }}%</dd>
+              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%</dd>
               <dt>Driving Behavior</dt>
               <dd>N/A</dd>
               <dt>Coords</dt>
-              <dd>{{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}</dd>
+              <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
             </dl>
-            <div><a href="vehicle_details.html#/vehicle_details/{{ active_marker.vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
+            <div><a href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
           </div>
         </div>
       </script>

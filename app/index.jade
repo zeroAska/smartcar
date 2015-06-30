@@ -7,10 +7,10 @@ block body
     div#map-canvas(class="google-map-canvas")
       div.google-map-container
 
-    div.ani-fade#vehicle-graphs(ng-if="active_marker")
+    div.ani-fade#vehicle-graphs(ng-if="marker_data.active_vehicle != null")
       div.vehicle-graph
         div
-          canvas.lines.chart.chart-line(data="active_marker.charts.data", labels="active_marker.charts.labels", legend="true", series="active_marker.charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}")
+          canvas.lines.chart.chart-line(data="vehicles[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: false}")
 
     div#not-ready.ani-fade(ng-if="!ready")
       div.text(ng-if="!gmaps_load_failed")
@@ -19,6 +19,20 @@ block body
         span(ng-if="_gmaps_loaded") Almost there
       div.text(ng-if="gmaps_load_failed")
         Loading Failed! Maybe you don't have access to Google Maps
+    iau-behavior
+      div(ng-if="gmap")
+        sbf-vmc-vehicle-marker(ng-repeat="vec in vehicles track by vec.vehicle_id", vec="vec", marker='map_marker_dict[vec.vehicle_id]')
+          div
+            div.ani-fade(style="width: 70px", ng-if="vec.vehicle_id!==marker_data.active_vehicle")
+              div(style="position: relative")
+                div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOC
+                div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
+                  div(iau-colored-progress, ratio="vec.data.state_of_charge",progressbreaks="progress_breaks")
+              div(style="position: relative")
+                div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOH
+                div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
+                  div(iau-colored-progress, ratio="vec.data.state_of_health",progressbreaks="progress_breaks")
+
     div.script-block
       <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
       <!-- process:[src] js/markerwithlabel.min.js -->
@@ -26,33 +40,22 @@ block body
       <!-- /process -->
 
   div#angular-templates(style="display: none")
-    script(type='text/ng-template', id='partials/vehicle_marker_label.html')
-      div
-        div.ani-fade(style="width: 70px", ng-if="vec!==active_marker")
-          div(style="position: relative")
-            div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOC
-            div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
-              div(iau-colored-progress, ratio="vec.data.state_of_charge",progressbreaks="progress_breaks")
-          div(style="position: relative")
-            div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOH
-            div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
-              div(iau-colored-progress, ratio="vec.data.state_of_health",progressbreaks="progress_breaks")
     script(type='text/ng-template', id='partials/vehicle_info_window.html')
       div
-        div(ng-if="active_marker",style="width: 180px")
-          strong {{ active_marker.title }}
+        div(ng-if="marker_data.active_vehicle != null",style="width: 180px")
+          strong {{ vehicles[marker_data.active_vehicle].title }}
           dl
             dt Model
             dd N/A
             dt Bat Type/#
             dd N/A
             dt SOC
-            dd {{ (active_marker.data.state_of_charge * 100).toFixed(2) }}%
+            dd {{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%
             dt SOH
-            dd {{ (active_marker.data.state_of_health * 100).toFixed(2) }}%
+            dd {{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%
             dt Driving Behavior
             dd N/A
             dt Coords
-            dd {{active_marker.latitude | latlngcoords}}, {{active_marker.longitude | latlngcoords}}
+            dd {{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}
           div
-            a.btn.btn-primary.btn-sm(href="vehicle_details.html#/vehicle_details/{{ active_marker.vehicle_id }}") View Details
+            a.btn.btn-primary.btn-sm(href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}") View Details
