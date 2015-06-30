@@ -1,7 +1,8 @@
 extends layout/base.jade
 block variables
-  - var title = 'Vehicle Details'
   - var page_module = 'sbfModuleVehicleDetails'
+block titleelement
+  title(ng-bind="page_title || 'Smart Battery'")
 block body
   div.container-fluid
     div.row
@@ -151,4 +152,4 @@ block body
                     dt Coords
                     dd {{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}
                   div
-                    a.btn.btn-primary.btn-sm(href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}") View Details
+                    a.btn.btn-primary.btn-sm(ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })") View Details

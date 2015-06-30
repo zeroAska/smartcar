@@ -89,6 +89,7 @@ angular.module('sbfModuleVehiclesMap')
     $scope.ready = false;
 
     function handle_vehicle_update(data) {
+        $log.log(data);
         $q(function(resolve) {
             if (data.type != 'vehicle_status') {
                 throw new Error('Invalid data type received');
@@ -131,7 +132,7 @@ angular.module('sbfModuleVehiclesMap')
 
         $scope.$on('$destroy', function() {
             $scope.socket.disconnect();
-            $scope.socket.socket.disconnect(); // what sort of bug is this?!
+            $scope.socket.removeListener('vehicle_update', handle_vehicle_update);
         });
     }
 

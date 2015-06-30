@@ -4,7 +4,8 @@ html(lang="en", ng-app=page_module)
   head
     meta(charset="utf-8")
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    title= title || 'Smart Battery Frontend'
+    block titleelement
+      title= title || 'Smart Battery Frontend'
     meta(name="viewport", content="width=device-width, initial-scale=1")
     <!-- build:css css/plugins.min.css -->
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">

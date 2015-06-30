@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Vehicle Details</title>
+    <title ng-bind="page_title || 'Smart Battery'"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- build:css css/plugins.min.css -->
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
@@ -210,7 +210,7 @@
                       <dt>Coords</dt>
                       <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
                     </dl>
-                    <div><a href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
+                    <div><a ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })" class="btn btn-primary btn-sm">View Details</a></div>
                   </div>
                 </div>
               </sbf-vmc-vehicle-info-window>
