@@ -18,9 +18,7 @@
   </head>
   <body ng-cloak>
     <div id="maps" ng-controller="sbfVehicleMapsController">
-      <div id="map-canvas" class="google-map-canvas">
-        <div class="google-map-container"></div>
-      </div>
+      <div id="map-canvas" ng-if="gmaps_loaded_all" sbf-google-maps options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }" gmaps="$parent.gmaps" class="google-map-canvas"></div>
       <div id="vehicle-graphs" ng-if="marker_data.active_vehicle != null" class="ani-fade">
         <div class="vehicle-graph">
           <div>
@@ -28,15 +26,15 @@
           </div>
         </div>
       </div>
-      <div id="not-ready" ng-if="!ready" class="ani-fade">
+      <div id="not-ready" ng-if="!gmaps" class="ani-fade">
         <div ng-if="!gmaps_load_failed" class="text">Loading Maps ... <span ng-if="_gmaps_loaded">Almost there</span>
         </div>
-        <div ng-if="gmaps_load_failed" class="text">
+        <div ng-if="gmaps_load_failed &amp;&amp; !gmaps" class="text">
           <Loading>Failed! Maybe you don't have access to Google Maps</Loading>
         </div>
       </div>
       <iau-behavior>
-        <div ng-if="gmap">
+        <div ng-if="gmaps">
           <sbf-vmc-vehicle-marker ng-repeat="vec in vehicles track by vec.vehicle_id" vec="vec" marker="map_marker_dict[vec.vehicle_id]">
             <div>
               <div style="width: 70px" ng-if="vec.vehicle_id!==marker_data.active_vehicle" class="ani-fade">
@@ -81,7 +79,7 @@
       <div class="script-block">
         <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
         <!-- process:[src] js/markerwithlabel.min.js -->
-        <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
+        <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-error="gmaps_load_failed=true" loaded="gmaps_loaded_all"></iau-script>
         <!-- /process -->
       </div>
     </div>

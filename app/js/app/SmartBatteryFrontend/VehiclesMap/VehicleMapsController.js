@@ -100,7 +100,6 @@ angular.module('sbfModuleVehiclesMap')
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_marker_dict = {};
     $scope.vehicles = {};
-    $scope.gmap = null;
     $scope.marker_data = {};
     $scope.ready = false;
 
@@ -150,32 +149,28 @@ angular.module('sbfModuleVehiclesMap')
         });
     }
 
-    function load_maps() {
-        var dummy_vehc = {lat: 31.0268809, lng: 121.4367119 };
-        var options = {center: dummy_vehc, zoom: 8 }; // 15 };
-        $scope.gmap = new google.maps.Map(angular.element('#map-canvas .google-map-container')[0], options);
-    }
-
-    function start_maps() {
-        begin_update_vehicle_status();
-        $scope.ready = true;
-        $log.log($scope.gmap);
-
-        $scope.$on('$destroy', function() {
-            $scope.map_marker_dict = null;
-        });
-    }
-
-    $scope.maps_loaded = function() {
-        $timeout.cancel(gmaps_load_timeout);
-        load_maps();
-        start_maps();
-    };
-
     $scope.gmaps_load_failed = false;
     var gmaps_load_timeout = $timeout(function() {
         $scope.gmaps_load_failed = true;
     }, sbfVMC$Options.gmaps_load_timeout);
+
+    begin_update_vehicle_status();
+})
+.directive('sbfGoogleMaps', function($log) {
+    return {
+        restrict: 'AE',
+        scope: {
+            gmaps: '='
+        },
+        link: function($scope, $element, $attrs) {
+            var container = angular.element('<div>');
+            container.addClass('google-map-container');
+            $element.empty();
+            $element.append(container);
+
+            $scope.gmaps = new google.maps.Map(container[0], $scope.$eval($attrs.options));
+        }
+    };
 })
 .directive('sbfVmcVehicleInfoWindow', function($log) {
     return {
@@ -189,7 +184,7 @@ angular.module('sbfModuleVehiclesMap')
 
                 scope.$watch('marker_data.active_vehicle', function(active_vehicle) {
                     if (active_vehicle != null) {
-                        vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_vehicle].marker);
+                        vehicle_info_window.open($scope.gmaps, $scope.map_marker_dict[active_vehicle].marker);
                     } else {
                         vehicle_info_window.close();
                     }
@@ -265,7 +260,7 @@ angular.module('sbfModuleVehiclesMap')
             $transclude($scope, function(cloned, scope) {
                 var container = angular.element('<div>');
                 container.append(cloned);
-                var marker = new MapMarker(scope, scope.vec, scope.gmap, container);
+                var marker = new MapMarker(scope, scope.vec, scope.gmaps, container);
                 var vehicle_id = scope.vec.vehicle_id;
                 marker.click(function() {
                     scope.$apply(function() {
