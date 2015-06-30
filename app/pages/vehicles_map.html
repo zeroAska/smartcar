@@ -1,0 +1,61 @@
+
+<div id="maps">
+  <div id="map-canvas" ng-if="gmaps_loaded_all" sbf-google-maps="sbf-google-maps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }" gmaps="$parent.gmaps" class="google-map-canvas"></div>
+  <div id="vehicle-graphs" ng-if="marker_data.active_vehicle != null" class="ani-fade">
+    <div class="vehicle-graph">
+      <div>
+        <canvas data="vehicles[marker_data.active_vehicle].charts.data" labels="vehicles[marker_data.active_vehicle].charts.labels" legend="true" series="vehicles[marker_data.active_vehicle].charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true, animation: false}" class="lines chart chart-line"></canvas>
+      </div>
+    </div>
+  </div>
+  <div id="not-ready" ng-if="!gmaps" class="ani-fade">
+    <div ng-if="!gmaps_load_failed" class="text">Loading Maps ... <span ng-if="_gmaps_loaded">Almost there</span>
+    </div>
+    <div ng-if="gmaps_load_failed &amp;&amp; !gmaps" class="text">
+      <Loading>Failed! Maybe you don't have access to Google Maps</Loading>
+    </div>
+  </div>
+  <iau-behavior>
+    <div ng-if="gmaps">
+      <sbf-vmc-vehicle-marker ng-repeat="vec in vehicles track by vec.vehicle_id" vec="vec" marker="map_marker_dict[vec.vehicle_id]">
+        <div>
+          <div style="width: 70px" ng-if="vec.vehicle_id!==marker_data.active_vehicle" class="ani-fade">
+            <div style="position: relative">
+              <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
+              <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
+                <div iau-colored-progress="iau-colored-progress" ratio="vec.data.state_of_charge" progressbreaks="progress_breaks"></div>
+              </div>
+            </div>
+            <div style="position: relative">
+              <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
+              <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
+                <div iau-colored-progress="iau-colored-progress" ratio="vec.data.state_of_health" progressbreaks="progress_breaks"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sbf-vmc-vehicle-marker>
+      <sbf-vmc-vehicle-info-window>
+        <div>
+          <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
+            <dl>
+              <dt>Model</dt>
+              <dd>N/A</dd>
+              <dt>Bat Type/#</dt>
+              <dd>N/A</dd>
+              <dt>SOC</dt>
+              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%</dd>
+              <dt>SOH</dt>
+              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%</dd>
+              <dt>Driving Behavior</dt>
+              <dd>N/A</dd>
+              <dt>Coords</dt>
+              <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
+            </dl>
+            <div><a ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })" class="btn btn-primary btn-sm">View Details</a></div>
+          </div>
+        </div>
+      </sbf-vmc-vehicle-info-window>
+    </div>
+  </iau-behavior>
+</div>

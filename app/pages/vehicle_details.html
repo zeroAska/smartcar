@@ -1,0 +1,100 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">Storm Edge
+          <div style="position: relative; top: -5px" class="pull-right">
+            <button type="button" class="btn btn-primary btn-sm">Edit</button>
+          </div>
+        </div>
+        <div class="panel-body"><img src="http://images.dealer.com/autodata/us/640/color/2015/USC50TOS071A0/218.jpg" class="img-responsive"/>
+          <dl>
+            <dt>Vehicle ID</dt>
+            <dd>XXX</dd>
+            <dt>Vehicle Model</dt>
+            <dd>XXX</dd>
+            <dt>Battery Model</dt>
+            <dd>XXX</dd>
+            <dt>Usage Date</dt>
+            <dd>XXX</dd>
+            <dt>Current Status</dt>
+            <dd>XXX</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="panel panel-primary">
+        <div class="panel-heading">Dashboard</div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-4">
+              <div>
+                <datepicker ng-model="display_date"></datepicker>
+              </div>
+              <div style="margin-top: 10px" class="btn-group">
+                <div class="btn-group">
+                  <button type="button" ng-click="set_to_today()" class="btn btn-info btn-sm">Today</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div>
+                <div>Mileage</div>
+                <div>Average Energy Consumption</div>
+                <div>Daily Mileage</div>
+                <div>Daily Energy Consumption</div>
+                <div>Average Energy Consumption</div>
+                <div>Notes</div>
+              </div>
+            </div>
+            <div class="col-lg-4 clearfix">
+              <div style="margin-right: 15px; margin-top: 5px;" class="pull-left">
+                <div class="battery-progress-icon-vertical">
+                  <div class="battery-tab"></div>
+                  <div style="margin: 0; width: 80px; height: 200px" class="progress vertical">
+                    <div iau-colored-progress="iau-colored-progress" ratio="battery_ratio" vertical="vertical" class="progress-bar vertical-bottom"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div>Refresh Time</div>
+                <div>SOC</div>
+                <div>SOH</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <tabset class="nav-tab-wrapped">
+          <tab heading="Vehicle Report">
+            <div class="row">
+              <div class="col-lg-6"><img src="http://www.car-illustration.com/illustrations/top-view-suv-frame-chassis.jpg" class="img-responsive"/></div>
+              <div class="col-lg-6">
+                <ul class="list-group">
+                  <li ng-repeat="component in components" ng-class="{ 'list-group-item-success': component.success, 'list-group-item-danger': component.error, 'list-group-item-warning': component.warning }" class="list-group-item">{{ component.name }}</li>
+                </ul>
+              </div>
+            </div>
+          </tab>
+          <tab heading="Vehicle Performance Report" select="chart_once_delayed(resize_chart)" active="complex_active">
+            <div class="row">
+              <div class="col-lg-6">
+                <div style="max-height: 400px">
+                  <canvas data="vehicle.performance_chart.data" labels="vehicle.performance_chart.labels" legend="true" series="vehicle.performance_chart.series" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true}" do-resize="resize_chart" class="chart chart-line"></canvas>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div style="position: relative; height: 400px" sbf-google-maps="sbf-google-maps" ng-if="gmaps_loaded_all &amp;&amp; complex_active" gmaps="maps_data.gmaps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }"></div>
+              </div>
+            </div>
+          </tab>
+          <tab heading="Battery Health Report">Three</tab>
+          <tab heading="User Usage Report">Four</tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>
