@@ -1,5 +1,9 @@
 angular.module('sbfModuleCommon')
 .service('sbfGoogleMapsInstanceCache', function() {
+    /**
+     * Why is this needed? Because you cannot properly destroy Google Maps
+     * instances.  Prevents memory leaks on SPAs.
+     */
     var inactive_maps_instances = [];
     this.get = function() {
         if (inactive_maps_instances.length > 0) {
