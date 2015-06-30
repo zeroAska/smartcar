@@ -55,6 +55,27 @@
               </div>
             </div>
           </sbf-vmc-vehicle-marker>
+          <sbf-vmc-vehicle-info-window>
+            <div>
+              <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
+                <dl>
+                  <dt>Model</dt>
+                  <dd>N/A</dd>
+                  <dt>Bat Type/#</dt>
+                  <dd>N/A</dd>
+                  <dt>SOC</dt>
+                  <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%</dd>
+                  <dt>SOH</dt>
+                  <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%</dd>
+                  <dt>Driving Behavior</dt>
+                  <dd>N/A</dd>
+                  <dt>Coords</dt>
+                  <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
+                </dl>
+                <div><a href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
+              </div>
+            </div>
+          </sbf-vmc-vehicle-info-window>
         </div>
       </iau-behavior>
       <div class="script-block">
@@ -63,29 +84,6 @@
         <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-loaded="maps_loaded()" on-error="gmaps_load_failed=true"></iau-script>
         <!-- /process -->
       </div>
-    </div>
-    <div id="angular-templates" style="display: none">
-      <script type="text/ng-template" id="partials/vehicle_info_window.html">
-        <div>
-          <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
-            <dl>
-              <dt>Model</dt>
-              <dd>N/A</dd>
-              <dt>Bat Type/#</dt>
-              <dd>N/A</dd>
-              <dt>SOC</dt>
-              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%</dd>
-              <dt>SOH</dt>
-              <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%</dd>
-              <dt>Driving Behavior</dt>
-              <dd>N/A</dd>
-              <dt>Coords</dt>
-              <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
-            </dl>
-            <div><a href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
-          </div>
-        </div>
-      </script>
     </div>
     <div class="script-block">
       <!-- build:js js/plugins.min.js -->

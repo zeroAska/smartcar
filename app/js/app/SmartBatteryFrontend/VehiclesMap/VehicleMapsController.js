@@ -161,25 +161,6 @@ angular.module('sbfModuleVehiclesMap')
         $scope.ready = true;
         $log.log($scope.gmap);
 
-        $scope.vehicle_info_window = new google.maps.InfoWindow();
-        var te = sbfVMC$Tools.compile_and_link('partials/vehicle_info_window.html', $scope);
-        $log.log(te);
-        $scope.vehicle_info_window.setContent(te[0]);
-
-        $scope.$watch('marker_data.active_vehicle', function(active_vehicle) {
-            if (active_vehicle != null) {
-                $scope.vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_vehicle].marker);
-            } else {
-                $scope.vehicle_info_window.close();
-            }
-        });
-
-        google.maps.event.addListener($scope.vehicle_info_window, 'closeclick', function() {
-            $scope.$apply(function() {
-                $scope.marker_data.active_vehicle = null;
-            });
-        });
-
         $scope.$on('$destroy', function() {
             $scope.map_marker_dict = null;
         });
@@ -195,6 +176,42 @@ angular.module('sbfModuleVehiclesMap')
     var gmaps_load_timeout = $timeout(function() {
         $scope.gmaps_load_failed = true;
     }, sbfVMC$Options.gmaps_load_timeout);
+})
+.directive('sbfVmcVehicleInfoWindow', function($log) {
+    return {
+        restrict: 'E',
+        transclude: true,
+        link: function($scope, $element, $attrs, $controller, $transclude) {
+            $transclude($scope, function(clone, scope) {
+                var vehicle_info_window = new google.maps.InfoWindow();
+                var window_content = angular.element('<div>').append(clone);
+                vehicle_info_window.setContent(window_content[0]);
+
+                scope.$watch('marker_data.active_vehicle', function(active_vehicle) {
+                    if (active_vehicle != null) {
+                        vehicle_info_window.open($scope.gmap, $scope.map_marker_dict[active_vehicle].marker);
+                    } else {
+                        vehicle_info_window.close();
+                    }
+                });
+
+                function closeclick() {
+                    $scope.$apply(function() {
+                        $scope.marker_data.active_vehicle = null;
+                    });
+                }
+
+                google.maps.event.addListener(vehicle_info_window, 'closeclick', closeclick);
+
+                scope.$on('$destroy', function() {
+                    vehicle_info_window.close();
+                    vehicle_info_window.setContent(null);
+                    window_content.remove();
+                    google.maps.event.removeListener(closeclick);
+                });
+            });
+        }
+    };
 })
 .directive('sbfVmcVehicleMarker', function($log, sbfVMC$Options, sbfVMC$Tools) {
     /**
