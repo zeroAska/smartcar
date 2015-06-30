@@ -19,21 +19,6 @@ angular.module('sbfModuleVehiclesMap')
 })
 .factory('sbfVMC$Tools', function($log, $compile, $templateCache, $http) {
     return {
-        compile_and_link: function(template, scope) {
-            var template_element;
-            if (typeof template == 'string') {
-                // templates specified in this way must have been pre-cached,
-                // via script(type="text/ng-template"), or other means (like a
-                // factory provider, for example)
-                template_element = angular.element($templateCache.get(template));
-            } else {
-                template_element = template.clone();
-            }
-
-            var link_func = $compile(template_element);
-            link_func(scope);
-            return template_element;
-        },
         MarkSlider: function(marker, step_time) {
             var timer = null;
             var source_coord = null;
