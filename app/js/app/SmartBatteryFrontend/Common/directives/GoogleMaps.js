@@ -16,14 +16,10 @@ angular.module('sbfModuleCommon')
         inactive_maps_instances.push(instance);
     };
 })
-.directive('sbfGoogleMaps', function($log, sbfGoogleMapsInstanceCache) {
+.directive('sbfGoogleMaps', function($log, sbfGoogleMapsInstanceCache, $parse) {
     return {
         restrict: 'AE',
         transclude: true,
-        scope: {
-            gmap: '=?',
-            options: '=?'
-        },
         controller: function($scope) {
             this.gmap = null;
             this.getMap = function() {
@@ -32,6 +28,7 @@ angular.module('sbfModuleCommon')
         },
         link: function($scope, $element, $attrs, controller, $transclude) {
             var cached_map;
+            var gmap_assigner = $parse($attrs.gmap);
             if ($attrs.noCaching == null) {
                 cached_map = sbfGoogleMapsInstanceCache.get();
             }
@@ -40,7 +37,7 @@ angular.module('sbfModuleCommon')
                 $element.empty();
                 $element.append(cached_map.container);
                 google.maps.event.trigger(cached_map.instance, 'resize');
-                cached_map.instance.setOptions($scope.options);
+                cached_map.instance.setOptions($scope.$eval($attrs.options));
             } else {
                 $log.log('creating new map');
                 cached_map = {};
@@ -52,18 +49,22 @@ angular.module('sbfModuleCommon')
             }
 
 
-            $scope.gmap = cached_map.instance;
+            if (gmap_assigner.assign) {
+                gmap_assigner.assign($scope, cached_map.instance);
+            }
             controller.gmap = cached_map.instance;
 
             var childrenContainer = $('<div>').hide().appendTo($element);
-            $transclude($scope.$parent, function(cloned) {
+            $transclude($scope, function(cloned) {
                 // This is mandatory to get parent controller reference working
                 childrenContainer.append(cloned);
             });
 
             $scope.$on('$destroy', function() {
                 cached_map.container.detach();
-                $scope.gmap = undefined;
+                if (gmap_assigner.assign) {
+                    gmap_assigner.assign($scope, undefined);
+                }
                 if ($attrs.noCaching == null) {
                     sbfGoogleMapsInstanceCache.put(cached_map);
                 }
