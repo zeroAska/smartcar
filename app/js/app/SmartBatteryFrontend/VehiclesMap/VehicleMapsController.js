@@ -153,33 +153,34 @@ angular.module('sbfModuleVehiclesMap')
             getVehicleMarker: '&',
         },
         link: function($scope, $element, $attrs, $controller, $transclude) {
+            var window_container = angular.element('<div>');
             $transclude($scope.$parent, function(clone) {
-                var vehicle_info_window = new google.maps.InfoWindow();
-                var window_content = angular.element('<div>').append(clone);
-                vehicle_info_window.setContent(window_content[0]);
+                window_container.append(clone);
+            });
+            var vehicle_info_window = new google.maps.InfoWindow();
+            vehicle_info_window.setContent(window_container[0]);
 
-                $scope.$watch('activeVehicleId', function(active_vehicle) {
-                    if (active_vehicle != null) {
-                        var marker = $scope.getVehicleMarker({ vehicle_id: active_vehicle });
-                        vehicle_info_window.open($controller.getMap(), marker);
-                    } else {
-                        vehicle_info_window.close();
-                    }
-                });
-
-
-                var closelistener = google.maps.event.addListener(vehicle_info_window, 'closeclick', function () {
-                    $scope.$apply(function() {
-                        $scope.activeVehicleId = null;
-                    });
-                });
-
-                $scope.$on('$destroy', function() {
-                    google.maps.event.removeListener(closelistener);
+            $scope.$watch('activeVehicleId', function(active_vehicle) {
+                if (active_vehicle != null) {
+                    var marker = $scope.getVehicleMarker({ vehicle_id: active_vehicle });
+                    vehicle_info_window.open($controller.getMap(), marker);
+                } else {
                     vehicle_info_window.close();
-                    vehicle_info_window.setContent(null);
-                    window_content.remove();
+                }
+            });
+
+
+            var closelistener = google.maps.event.addListener(vehicle_info_window, 'closeclick', function () {
+                $scope.$apply(function() {
+                    $scope.activeVehicleId = null;
                 });
+            });
+
+            $scope.$on('$destroy', function() {
+                google.maps.event.removeListener(closelistener);
+                vehicle_info_window.close();
+                vehicle_info_window.setContent(null);
+                window_container.remove();
             });
         }
     };
