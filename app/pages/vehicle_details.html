@@ -68,7 +68,7 @@
         </div>
       </div>
       <div>
-        <tabset class="nav-tab-wrapped">
+        <tabset use-ng-if="use-ng-if" class="nav-tab-wrapped">
           <tab heading="Vehicle Report">
             <div class="row">
               <div class="col-lg-6"><img src="http://www.car-illustration.com/illustrations/top-view-suv-frame-chassis.jpg" class="img-responsive"/></div>
@@ -79,7 +79,7 @@
               </div>
             </div>
           </tab>
-          <tab heading="Vehicle Performance Report" select="chart_once_delayed(resize_chart)" active="complex_active">
+          <tab heading="Vehicle Performance Report">
             <div class="row">
               <div class="col-lg-6">
                 <div style="max-height: 400px">
@@ -87,7 +87,7 @@
                 </div>
               </div>
               <div class="col-lg-6">
-                <div style="position: relative; height: 400px" sbf-google-maps="sbf-google-maps" ng-if="gmaps_loaded_all &amp;&amp; complex_active" gmap="maps_data.gmaps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }">
+                <div style="position: relative; height: 400px" sbf-google-maps="sbf-google-maps" ng-if="gmaps_loaded_all" gmap="maps_data.gmaps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }">
                   <sbf-google-maps-polyline path="[{lat: 31.0268809, lng: 121.4367119}, {lat: 31, lng: 121}, {lat: 30, lng: 121}]" options="{strokeColor: &quot;#ff0000&quot;}"></sbf-google-maps-polyline>
                 </div>
               </div>

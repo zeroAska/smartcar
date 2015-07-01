@@ -39,15 +39,6 @@ angular.module('sbfModuleVehicleDetails')
         });
     }, 1000.0);
 
-    $scope.chart_once_delayed = function(fn) {
-        $timeout(function() {
-            fn();
-            google.maps.event.trigger($scope.maps_data.gmaps, 'resize');
-            $scope.vehicle.performance_chart.data[0][0] = 0;
-        }, 100);
-        $scope.chart_once_delay = null;
-    };
-
     $scope.maps_data = {};
 })
 ;
