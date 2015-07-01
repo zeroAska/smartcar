@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="sbfModuleVehiclesMap">
+<html lang="en" ng-app="sbfModuleVehicleDetails">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Maps Basic</title>
+    <title ng-bind="page_title || 'Smart Battery'"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- build:css css/plugins.min.css -->
     <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
@@ -17,66 +17,32 @@
     <!-- endbuild -->
   </head>
   <body ng-cloak>
-    <div id="maps" ng-controller="sbfVehicleMapsController">
-      <div id="map-canvas" ng-if="gmaps_loaded_all" sbf-google-maps options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }" gmaps="$parent.gmaps" class="google-map-canvas"></div>
-      <div id="vehicle-graphs" ng-if="marker_data.active_vehicle != null" class="ani-fade">
-        <div class="vehicle-graph">
-          <div>
-            <canvas data="vehicles[marker_data.active_vehicle].charts.data" labels="vehicles[marker_data.active_vehicle].charts.labels" legend="true" series="vehicles[marker_data.active_vehicle].charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true, animation: false}" class="lines chart chart-line"></canvas>
-          </div>
-        </div>
-      </div>
-      <div id="not-ready" ng-if="!gmaps" class="ani-fade">
-        <div ng-if="!gmaps_load_failed" class="text">Loading Maps ... <span ng-if="_gmaps_loaded">Almost there</span>
-        </div>
-        <div ng-if="gmaps_load_failed &amp;&amp; !gmaps" class="text">
-          <Loading>Failed! Maybe you don't have access to Google Maps</Loading>
-        </div>
-      </div>
-      <iau-behavior>
-        <div ng-if="gmaps">
-          <sbf-vmc-vehicle-marker ng-repeat="vec in vehicles track by vec.vehicle_id" vec="vec" marker="map_marker_dict[vec.vehicle_id]">
-            <div>
-              <div style="width: 70px" ng-if="vec.vehicle_id!==marker_data.active_vehicle" class="ani-fade">
-                <div style="position: relative">
-                  <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOC</div>
-                  <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
-                    <div iau-colored-progress ratio="vec.data.state_of_charge" progressbreaks="progress_breaks"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <div class="navbar-brand">Smart Battery</div>
+              </div>
+              <div>
+                <ul class="nav navbar-nav">
+                  <li><a ui-sref="vehicles_map">All vehicles</a></li>
+                  <li class="active"><a href="javascript: void(0)">Vehicle Details</a></li>
+                </ul>
+              </div>
+              <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                  <div class="navbar-text">&lt;User&gt; &lt;Image&gt;
                   </div>
-                </div>
-                <div style="position: relative">
-                  <div style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold">SOH</div>
-                  <div style="width: 40px; height: 10px; margin-bottom: 1px;" class="progress">
-                    <div iau-colored-progress ratio="vec.data.state_of_health" progressbreaks="progress_breaks"></div>
-                  </div>
-                </div>
+                </ul>
               </div>
             </div>
-          </sbf-vmc-vehicle-marker>
-          <sbf-vmc-vehicle-info-window>
-            <div>
-              <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
-                <dl>
-                  <dt>Model</dt>
-                  <dd>N/A</dd>
-                  <dt>Bat Type/#</dt>
-                  <dd>N/A</dd>
-                  <dt>SOC</dt>
-                  <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%</dd>
-                  <dt>SOH</dt>
-                  <dd>{{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%</dd>
-                  <dt>Driving Behavior</dt>
-                  <dd>N/A</dd>
-                  <dt>Coords</dt>
-                  <dd>{{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}</dd>
-                </dl>
-                <div><a href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}" class="btn btn-primary btn-sm">View Details</a></div>
-              </div>
-            </div>
-          </sbf-vmc-vehicle-info-window>
+          </nav>
         </div>
-      </iau-behavior>
+      </div>
     </div>
+    <div id="main" ui-view></div>
     <div class="script-block">
       <!-- build:js js/plugins.min.js -->
       <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>

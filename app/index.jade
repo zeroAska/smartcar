@@ -1,52 +1,25 @@
 extends layout/base.jade
 block variables
-  - var title = 'Maps Basic'
-  - var page_module = 'sbfModuleVehiclesMap'
+  - var page_module = 'sbfModuleVehicleDetails'
+block titleelement
+  title(ng-bind="page_title || 'Smart Battery'")
 block body
-  div#maps(ng-controller="sbfVehicleMapsController")
-    div#map-canvas(class="google-map-canvas", ng-if="gmaps_loaded_all", sbf-google-maps, options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }", gmaps="$parent.gmaps")
-
-    div.ani-fade#vehicle-graphs(ng-if="marker_data.active_vehicle != null")
-      div.vehicle-graph
-        div
-          canvas.lines.chart.chart-line(data="vehicles[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: false}")
-
-    div#not-ready.ani-fade(ng-if="!gmaps")
-      div.text(ng-if="!gmaps_load_failed")
-        | Loading Maps ...
-        = ' '
-        span(ng-if="_gmaps_loaded") Almost there
-      div.text(ng-if="gmaps_load_failed && !gmaps")
-        Loading Failed! Maybe you don't have access to Google Maps
-    iau-behavior
-      div(ng-if="gmaps")
-        sbf-vmc-vehicle-marker(ng-repeat="vec in vehicles track by vec.vehicle_id", vec="vec", marker='map_marker_dict[vec.vehicle_id]')
-          div
-            div.ani-fade(style="width: 70px", ng-if="vec.vehicle_id!==marker_data.active_vehicle")
-              div(style="position: relative")
-                div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOC
-                div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
-                  div(iau-colored-progress, ratio="vec.data.state_of_charge",progressbreaks="progress_breaks")
-              div(style="position: relative")
-                div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOH
-                div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
-                  div(iau-colored-progress, ratio="vec.data.state_of_health",progressbreaks="progress_breaks")
-        sbf-vmc-vehicle-info-window
-          div
-            div(ng-if="marker_data.active_vehicle != null",style="width: 180px")
-              strong {{ vehicles[marker_data.active_vehicle].title }}
-              dl
-                dt Model
-                dd N/A
-                dt Bat Type/#
-                dd N/A
-                dt SOC
-                dd {{ (vehicles[marker_data.active_vehicle].data.state_of_charge * 100).toFixed(2) }}%
-                dt SOH
-                dd {{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%
-                dt Driving Behavior
-                dd N/A
-                dt Coords
-                dd {{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}
-              div
-                a.btn.btn-primary.btn-sm(href="vehicle_details.html#/vehicle_details/{{ vehicles[marker_data.active_vehicle].vehicle_id }}") View Details
+  div.container-fluid
+    div.row
+      div.col-md-12
+        nav.navbar.navbar-default
+          div.container-fluid
+            div.navbar-header
+              div.navbar-brand Smart Battery
+            //- Collapse?
+            div
+              ul.nav.navbar-nav
+                li
+                  a(ui-sref="vehicles_map") All vehicles
+                li.active
+                  a(href="javascript: void(0)") Vehicle Details
+            div.navbar-right
+              ul.nav.navbar-nav
+                div.navbar-text
+                  = '<User> <Image>'
+  div#main(ui-view)
