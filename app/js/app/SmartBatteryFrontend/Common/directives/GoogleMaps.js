@@ -19,10 +19,18 @@ angular.module('sbfModuleCommon')
 .directive('sbfGoogleMaps', function($log, sbfGoogleMapsInstanceCache) {
     return {
         restrict: 'AE',
+        transclude: true,
         scope: {
-            gmaps: '='
+            gmap: '=?',
+            options: '=?'
         },
-        link: function($scope, $element, $attrs) {
+        controller: function($scope) {
+            this.gmap = null;
+            this.getMap = function() {
+                return this.gmap;
+            };
+        },
+        link: function($scope, $element, $attrs, controller, $transclude) {
             var cached_map;
             if ($attrs.noCaching == null) {
                 cached_map = sbfGoogleMapsInstanceCache.get();
@@ -32,7 +40,7 @@ angular.module('sbfModuleCommon')
                 $element.empty();
                 $element.append(cached_map.container);
                 google.maps.event.trigger(cached_map.instance, 'resize');
-                cached_map.instance.setOptions($scope.$eval($attrs.options));
+                cached_map.instance.setOptions($scope.options);
             } else {
                 $log.log('creating new map');
                 cached_map = {};
@@ -44,15 +52,22 @@ angular.module('sbfModuleCommon')
             }
 
 
-            $scope.gmaps = cached_map.instance;
+            $scope.gmap = cached_map.instance;
+            controller.gmap = cached_map.instance;
+
+            var childrenContainer = $('<div>').hide().appendTo($element);
+            $transclude($scope.$parent, function(cloned) {
+                // This is mandatory to get parent controller reference working
+                childrenContainer.append(cloned);
+            });
 
             $scope.$on('$destroy', function() {
                 cached_map.container.detach();
-                cached_map.container.remove();
-                $scope.gmaps = undefined;
+                $scope.gmap = undefined;
                 if ($attrs.noCaching == null) {
                     sbfGoogleMapsInstanceCache.put(cached_map);
                 }
+                childrenContainer.remove();
             });
         }
     };

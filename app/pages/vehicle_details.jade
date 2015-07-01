@@ -63,7 +63,10 @@ div.container-fluid
                 div(style="max-height: 400px")
                   canvas.chart.chart-line(data="vehicle.performance_chart.data", labels="vehicle.performance_chart.labels", legend="true", series="vehicle.performance_chart.series", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true}", do-resize="resize_chart")
               div.col-lg-6
-                div(style="position: relative; height: 400px", sbf-google-maps, ng-if="gmaps_loaded_all && complex_active", gmaps="maps_data.gmaps", options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }")
+                div(style="position: relative; height: 400px", sbf-google-maps, ng-if="gmaps_loaded_all && complex_active", gmap="maps_data.gmaps", options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }")
+                  sbf-google-maps-polyline(
+                    path='[{lat: 31.0268809, lng: 121.4367119}, {lat: 31, lng: 121}, {lat: 30, lng: 121}]',
+                    options='{strokeColor: "#ff0000"}')
           tab(heading="Battery Health Report")
             | Three
           tab(heading="User Usage Report")

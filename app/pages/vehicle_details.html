@@ -87,7 +87,9 @@
                 </div>
               </div>
               <div class="col-lg-6">
-                <div style="position: relative; height: 400px" sbf-google-maps="sbf-google-maps" ng-if="gmaps_loaded_all &amp;&amp; complex_active" gmaps="maps_data.gmaps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }"></div>
+                <div style="position: relative; height: 400px" sbf-google-maps="sbf-google-maps" ng-if="gmaps_loaded_all &amp;&amp; complex_active" gmap="maps_data.gmaps" options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }">
+                  <sbf-google-maps-polyline path="[{lat: 31.0268809, lng: 121.4367119}, {lat: 31, lng: 121}, {lat: 30, lng: 121}]" options="{strokeColor: &quot;#ff0000&quot;}"></sbf-google-maps-polyline>
+                </div>
               </div>
             </div>
           </tab>
