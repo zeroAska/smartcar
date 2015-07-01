@@ -4,7 +4,7 @@ block variables
 block titleelement
   title(ng-bind="page_title || 'Smart Battery'")
 block body
-  div.container-fluid
+  div.container-fluid(ng-if="!full_page")
     div.row
       div.col-md-12
         nav.navbar.navbar-default

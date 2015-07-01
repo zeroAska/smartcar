@@ -1,15 +1,8 @@
 angular.module('sbfModuleTemplates', []);
 angular.module('sbfModuleIndex', ['sbfModuleVehiclesMap', 'sbfModuleVehicleDetails', 'sbfModuleTemplates'])
 .config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/wrong_url');
+    $urlRouterProvider.otherwise('/vehicles_map');
     $stateProvider
-        .state('wrong_url', {
-            url: '/wrong_url',
-            templateUrl: 'pages/wrong_url.html',
-            data: {
-                title: 'Wrong URL'
-            }
-        })
         .state('vehicle_details', {
             url: '/vehicle_details/{vehicle_id}',
             templateUrl: 'pages/vehicle_details.html',
@@ -23,18 +16,22 @@ angular.module('sbfModuleIndex', ['sbfModuleVehiclesMap', 'sbfModuleVehicleDetai
             templateUrl: 'pages/vehicles_map.html',
             controller: 'sbfVehicleMapsController',
             data: {
-                title: 'Vehicles Map'
+                title: 'Vehicles Map',
+                full_page: true
             }
         })
     ;
 })
 .run(function($rootScope) {
+    $rootScope.full_page = true;
     $rootScope.$on('$stateChangeSuccess', function(event, toState) {
-        var title;
+        var title, full_page;
         if (toState.data) {
             title = toState.data.title;
+            full_page = toState.data.full_page;
         }
         $rootScope.page_title = title;
+        $rootScope.full_page = full_page;
     });
 })
 ;
