@@ -270,7 +270,9 @@ angular.module('sbfModuleVehiclesMap')
             storeMarker($scope, { vehicle_id: vehicle_id, marker: marker });
 
             $scope.$on('$destroy', function() {
-                activeVehicleId.assign($scope, null);
+                if (activeVehicleId($scope) == vehicle_id) {
+                    activeVehicleId.assign($scope, null);
+                }
                 marker.close();
                 storeMarker($scope, { vehicle_id: vehicle_id, marker: undefined });
             });
