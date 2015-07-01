@@ -87,6 +87,7 @@ angular.module('sbfModuleVehiclesMap')
     $scope.vehicles = {};
     $scope.marker_data = {};
     $scope.ready = false;
+    $scope.progress_breaks = sbfVMC$Options.progress_breaks;
 
     function handle_vehicle_update(data) {
         $log.log(data);
@@ -202,7 +203,6 @@ angular.module('sbfModuleVehiclesMap')
             icon: sbfVMC$Options.default_icon,
             labelAnchor: new google.maps.Point(20, 40)
         });
-        $scope.progress_breaks = sbfVMC$Options.progress_breaks;
         this._element = element;
         this.marker.set('labelContent', this._element[0]);
         this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
@@ -234,37 +234,42 @@ angular.module('sbfModuleVehiclesMap')
         require: '^sbfGoogleMaps',
         restrict: 'E',
         transclude: true,
+        scope: {
+            vec: '=',
+            activeVehicleId: '=',
+            storeMarker: '&',
+        },
         link: function($scope, $element, $attrs, $controller, $transclude) {
-            $transclude($scope, function(cloned, scope) {
-                var container = angular.element('<div>');
+            var container = angular.element('<div>');
+            $transclude($scope.$parent, function(cloned, scope) {
                 container.append(cloned);
-                var marker = new MapMarker(scope, scope.vec, $controller.getMap(), container);
-                var vehicle_id = scope.vec.vehicle_id;
-                marker.click(function() {
-                    scope.$apply(function() {
-                        if (scope.marker_data.active_vehicle === scope.vec.vehicle_id) {
-                            scope.marker_data.active_vehicle = null;
-                        } else {
-                            scope.marker_data.active_vehicle = scope.vec.vehicle_id;
-                        }
-                    });
-                });
-
-                scope.$watch('marker_data.active_vehicle', function(vehicle_id) {
-                    if (vehicle_id === scope.vec.vehicle_id) {
-                        marker.marker.setIcon(sbfVMC$Options.active_icon);
+            });
+            var marker = new MapMarker($scope, $scope.vec, $controller.getMap(), container);
+            var vehicle_id = $scope.vec.vehicle_id;
+            marker.click(function() {
+                $scope.$apply(function() {
+                    if ($scope.activeVehicleId === vehicle_id) {
+                        $scope.activeVehicleId = null;
                     } else {
-                        marker.marker.setIcon(sbfVMC$Options.default_icon);
+                        $scope.activeVehicleId = vehicle_id;
                     }
                 });
+            });
 
-                scope.map_marker_dict[vehicle_id] = marker;
+            $scope.$watch('activeVehicleId', function(active_vehicle_id) {
+                if (active_vehicle_id === vehicle_id) {
+                    marker.marker.setIcon(sbfVMC$Options.active_icon);
+                } else {
+                    marker.marker.setIcon(sbfVMC$Options.default_icon);
+                }
+            });
 
-                scope.$on('$destroy', function() {
-                    scope.marker_data.active_vehicle = null;
-                    marker.close();
-                    delete scope.map_marker_dict[vehicle_id];
-                });
+            $scope.storeMarker({ vehicle_id: vehicle_id, marker: marker });
+
+            $scope.$on('$destroy', function() {
+                $scope.activeVehicleId = null;
+                marker.close();
+                $scope.storeMarker({ vehicle_id: vehicle_id, marker: undefined });
             });
         }
     };

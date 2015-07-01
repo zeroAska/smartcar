@@ -1,6 +1,6 @@
 div#maps
   div#map-canvas(class="google-map-canvas", ng-if="gmaps_loaded_all", sbf-google-maps, options="{center: {lat: 31.0268809, lng: 121.4367119 }, zoom: 8 }", gmap="$parent.gmaps")
-    sbf-vmc-vehicle-marker(ng-repeat="vec in vehicles track by vec.vehicle_id", vec="vec", marker='map_marker_dict[vec.vehicle_id]')
+    sbf-vmc-vehicle-marker(ng-repeat="vec in vehicles track by vec.vehicle_id", vec="vec", store-marker='map_marker_dict[vehicle_id] = marker', active-vehicle-id="marker_data.active_vehicle")
       div
         div.ani-fade(style="width: 70px", ng-if="vec.vehicle_id!==marker_data.active_vehicle")
           div(style="position: relative")
