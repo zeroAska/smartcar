@@ -19,7 +19,7 @@
         </div>
       </div>
     </sbf-vmc-vehicle-marker>
-    <sbf-vmc-vehicle-info-window>
+    <sbf-vmc-vehicle-info-window active-vehicle-id="marker_data.active_vehicle" get-vehicle-marker="map_marker_dict[vehicle_id].marker">
       <div>
         <div ng-if="marker_data.active_vehicle != null" style="width: 180px"><strong>{{ vehicles[marker_data.active_vehicle].title }}</strong>
           <dl>

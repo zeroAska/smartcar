@@ -11,7 +11,7 @@ div#maps
             div(style="position: absolute; left: 42px; top: 0; font-size: 10px; font-weight: bold") SOH
             div.progress(style="width: 40px; height: 10px; margin-bottom: 1px;")
               div(iau-colored-progress, ratio="vec.data.state_of_health",progressbreaks="progress_breaks")
-    sbf-vmc-vehicle-info-window
+    sbf-vmc-vehicle-info-window(active-vehicle-id="marker_data.active_vehicle", get-vehicle-marker="map_marker_dict[vehicle_id].marker")
       div
         div(ng-if="marker_data.active_vehicle != null",style="width: 180px")
           strong {{ vehicles[marker_data.active_vehicle].title }}
