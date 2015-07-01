@@ -57,7 +57,7 @@ div.container-fluid
               div.col-lg-6
                 ul.list-group
                   li.list-group-item(ng-repeat="component in components", ng-class="{ 'list-group-item-success': component.success, 'list-group-item-danger': component.error, 'list-group-item-warning': component.warning }") {{ component.name }}
-          tab(heading="Vehicle Performance Report")
+          tab(heading="Vehicle Performance Report", reactivate-on-resize-hidden)
             div.row
               div.col-lg-6
                 div(style="max-height: 400px")

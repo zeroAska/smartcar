@@ -3579,6 +3579,7 @@ angular.module('ui.bootstrap.tabs', [])
       return function postLink(scope, elm, attrs, tabsetCtrl) {
         scope.$watch('active', function(active) {
           if (active) {
+            scope.activated = true;
             tabsetCtrl.select(scope);
           }
         });
@@ -3588,6 +3589,20 @@ angular.module('ui.bootstrap.tabs', [])
           scope.$parent.$watch($parse(attrs.disable), function(value) {
             scope.disabled = !! value;
           });
+        }
+
+        if (angular.isDefined(attrs.reactivateOnResizeHidden)) {
+            function handleResize() {
+                if (scope.activated && !scope.active) {
+                    scope.$apply(function() {
+                        scope.activated = false;
+                    });
+                }
+            }
+            angular.element(window).on('resize', handleResize);
+            scope.$on('$destroy', function() {
+                angular.element(window).off('resize', handleResize);
+            });
         }
 
         // Deprecation support of "disabled" parameter
@@ -4801,9 +4816,10 @@ angular.module("template/tabs/tabset.html", []).run(["$templateCache", function(
     "<div>\n" +
     "  <ul class=\"nav nav-{{type || 'tabs'}}\" ng-class=\"{'nav-stacked': vertical, 'nav-justified': justified}\" ng-transclude></ul>\n" +
     "  <div class=\"tab-content\">\n" +
-    "    <div class=\"tab-pane active\" \n" +
+    "    <div class=\"tab-pane\" \n" +
     "         ng-repeat=\"tab in tabs\" \n" +
-    "         ng-if=\"tab.active\"\n" +
+    "         ng-class=\"{active: tab.active || !tab.activated}\"\n" +
+    "         ng-if=\"tab.activated\"\n" +
     "         tab-content-transclude=\"tab\">\n" +
     "    </div>\n" +
     "  </div>\n" +
