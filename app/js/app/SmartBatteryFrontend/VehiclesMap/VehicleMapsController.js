@@ -186,7 +186,7 @@ angular.module('sbfModuleVehiclesMap')
         }
     };
 })
-.directive('sbfVmcVehicleMarker', function($log, sbfVMC$Options, sbfVMC$Tools) {
+.directive('sbfVmcVehicleMarker', function($log, sbfVMC$Options, sbfVMC$Tools, $parse) {
     /**
      * @remarks Private use directive, assumes existing scope variables,
      * has implicit dependencies on global state, etc etc...
@@ -194,7 +194,7 @@ angular.module('sbfModuleVehiclesMap')
      * Use ng-repeat to simplify management and boost compile performance
      * with transclude
      */
-    function MapMarker($scope, data, map, element) {
+    function MapMarker(data, map, element) {
         var self = this;
         this.data = data;
         this.marker = new MarkerWithLabel({
@@ -206,10 +206,6 @@ angular.module('sbfModuleVehiclesMap')
         this._element = element;
         this.marker.set('labelContent', this._element[0]);
         this.slider = new sbfVMC$Tools.MarkSlider(this.marker);
-        $scope.$watchGroup(['vec.latitude', 'vec.longitude'], function(coords) {
-            // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
-            self.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
-        });
 
         this.listeners = [];
     }
@@ -234,29 +230,31 @@ angular.module('sbfModuleVehiclesMap')
         require: '^sbfGoogleMaps',
         restrict: 'E',
         transclude: true,
-        scope: {
+        /* non-isolation-scope: {
             vec: '=',
             activeVehicleId: '=',
             storeMarker: '&',
-        },
+        }, */
         link: function($scope, $element, $attrs, $controller, $transclude) {
             var container = angular.element('<div>');
-            $transclude($scope.$parent, function(cloned, scope) {
+            var activeVehicleId = $parse($attrs.activeVehicleId);
+            var storeMarker = $parse($attrs.storeMarker);
+            $transclude($scope, function(cloned) {
                 container.append(cloned);
             });
-            var marker = new MapMarker($scope, $scope.vec, $controller.getMap(), container);
-            var vehicle_id = $scope.vec.vehicle_id;
+            var marker = new MapMarker($scope.$eval($attrs.vec), $controller.getMap(), container);
+            var vehicle_id = $scope.$eval($attrs.vec).vehicle_id;
             marker.click(function() {
                 $scope.$apply(function() {
-                    if ($scope.activeVehicleId === vehicle_id) {
-                        $scope.activeVehicleId = null;
+                    if (activeVehicleId($scope) === vehicle_id) {
+                        activeVehicleId.assign($scope, null);
                     } else {
-                        $scope.activeVehicleId = vehicle_id;
+                        activeVehicleId.assign($scope, vehicle_id);
                     }
                 });
             });
 
-            $scope.$watch('activeVehicleId', function(active_vehicle_id) {
+            $scope.$watch($attrs.activeVehicleId, function(active_vehicle_id) {
                 if (active_vehicle_id === vehicle_id) {
                     marker.marker.setIcon(sbfVMC$Options.active_icon);
                 } else {
@@ -264,12 +262,17 @@ angular.module('sbfModuleVehiclesMap')
                 }
             });
 
-            $scope.storeMarker({ vehicle_id: vehicle_id, marker: marker });
+            $scope.$watchGroup([$attrs.vec + '.latitude', $attrs.vec + '.longitude'], function(coords) {
+                // marker.setPosition(new google.maps.LatLng(coords[0], coords[1]));
+                marker.slider.moveTo(new google.maps.LatLng(coords[0], coords[1]), 1000);
+            });
+
+            storeMarker($scope, { vehicle_id: vehicle_id, marker: marker });
 
             $scope.$on('$destroy', function() {
-                $scope.activeVehicleId = null;
+                activeVehicleId.assign($scope, null);
                 marker.close();
-                $scope.storeMarker({ vehicle_id: vehicle_id, marker: undefined });
+                storeMarker($scope, { vehicle_id: vehicle_id, marker: undefined });
             });
         }
     };
