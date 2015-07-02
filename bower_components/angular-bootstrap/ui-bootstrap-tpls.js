@@ -3471,9 +3471,11 @@ angular.module('ui.bootstrap.tabs', [])
             return 'template/tabs/tabset.html';
         }
     },
-    link: function(scope, element, attrs) {
+    link: function(scope, element, attrs, controller) {
       scope.vertical = angular.isDefined(attrs.vertical) ? scope.$parent.$eval(attrs.vertical) : false;
       scope.justified = angular.isDefined(attrs.justified) ? scope.$parent.$eval(attrs.justified) : false;
+
+      controller.usesNgIf = angular.isDefined(attrs.useNgIf);
     }
   };
 })
@@ -3655,13 +3657,22 @@ angular.module('ui.bootstrap.tabs', [])
   return {
     restrict: 'A',
     require: '^tabset',
-    link: function(scope, elm, attrs) {
+    link: function(scope, elm, attrs, controller) {
       var tab = scope.$eval(attrs.tabContentTransclude);
 
       //Now our tab is ready to be transcluded: both the tab heading area
       //and the tab content area are loaded.  Transclude 'em both.
       // XXX optionally create inherited child scope only when use-ng-if is specced
-      var childScope = tab.$parent.$new();
+      var childScope;
+      if (controller.usesNgIf) {
+        childScope = tab.$parent.$new();
+        scope.$on('$destroy', function() {
+            // XXX: this will bring a huge problem once headingelements are used
+            childScope.$destroy();
+        });
+      } else {
+        childScope = tab.$parent;
+      }
       tab.$transcludeFn(childScope, function(contents) {
         angular.forEach(contents, function(node) {
           if (isTabHeading(node)) {
@@ -3671,11 +3682,6 @@ angular.module('ui.bootstrap.tabs', [])
             elm.append(node);
           }
         });
-      });
-
-      scope.$on('$destroy', function() {
-        // XXX: this will bring a huge problem once headingelements are used
-        childScope.$destroy();
       });
     }
   };
