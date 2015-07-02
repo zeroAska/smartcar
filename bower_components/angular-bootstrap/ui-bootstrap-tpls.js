@@ -3643,7 +3643,6 @@ angular.module('ui.bootstrap.tabs', [])
             if (scope.activated && !scope.active) {
               scope.$apply(function() {
                 scope.activated = false;
-                console.log('deact');
               });
             }
           }
