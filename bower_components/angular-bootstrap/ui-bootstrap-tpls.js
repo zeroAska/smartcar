@@ -3560,13 +3560,14 @@ angular.module('ui.bootstrap.tabs', [])
   </file>
 </example>
  */
-.directive('tab', ['$parse', '$log', function($parse, $log) {
+.directive('tab', ['$parse', '$log', '$compile', '$templateRequest', function($parse, $log, $compile, $templateRequest) {
+  var templateUrl = 'template/tabs/tab.html';
   return {
     require: '^tabset',
     restrict: 'EA',
     replace: true,
-    templateUrl: 'template/tabs/tab.html',
-    transclude: true,
+    // templateUrl: 'template/tabs/tab.html',
+    // transclude: true,
     scope: {
       active: '=?',
       heading: '@',
@@ -3577,8 +3578,52 @@ angular.module('ui.bootstrap.tabs', [])
     controller: function() {
       //Empty controller so other directives can require being 'under' a tab
     },
-    compile: function(elm, attrs, transclude) {
+    compile: function(elm, attrs) {
+      // Transclude via angular.js directive.transclude behavior, correct
+      // and should perform okay.
+      var elem_transcluded = elm.clone().contents();
+      elem_transcluded.remove();
+
+      var heading_transcluded;
+      var content_transcluded = [];
+      angular.forEach(elem_transcluded, function(node) {
+        if (isTabHeading(node)) {
+          if (heading_transcluded) {
+            throw new Error('cannot have multiple tab heading elements');
+          }
+          heading_transcluded = node;
+        } else {
+          content_transcluded.push(node);
+        }
+      });
+      var transclude = $compile(angular.element(content_transcluded));
+      var heading_transclude;
+      if (heading_transcluded) {
+        heading_transclude = $compile(angular.element(heading_transcluded));
+      }
+
       return function postLink(scope, elm, attrs, tabsetCtrl) {
+        // templateUrl + replace
+        // XXX this method is questionably incorrecty. It works, but
+        //     1) the loaded template cannot find the parent tab controller
+        //        although the tabset controller **should** be accessible, due
+        //        to the correct dom tree preservation.  The current element
+        //        has been replaced, thus the controller information is lost.
+        //        To deal with this, the best way would be to find some content
+        //        preserving directive templateUrl handling. Hacking the
+        //        controller in by copying .data seems bad. Currently done
+        //        by disabling ^tab check in tabHeadingTransclude
+        //    2)  This load is (obviously) asynchronous, and because this is not
+        //        the implementation standard delayedLinkFn implementation,
+        //        I do not know what the FOUC behavior is.  Works well enough
+        //        with cached templates, so I'll let it go for now.
+        $templateRequest(templateUrl).then(function(content) {
+          $compile(content)(scope, function(clone) {
+            elm.replaceWith(clone);
+            elm = clone;
+          });
+        });
+
         scope.$watch('active', function(active) {
           if (active) {
             scope.activated = true;
@@ -3594,18 +3639,18 @@ angular.module('ui.bootstrap.tabs', [])
         }
 
         if (angular.isDefined(attrs.reactivateOnResizeHidden)) {
-            function handleResize() {
-                if (scope.activated && !scope.active) {
-                    scope.$apply(function() {
-                        scope.activated = false;
-                        console.log('deact');
-                    });
-                }
+          function handleResize() {
+            if (scope.activated && !scope.active) {
+              scope.$apply(function() {
+                scope.activated = false;
+                console.log('deact');
+              });
             }
-            angular.element(window).on('resize', handleResize);
-            scope.$on('$destroy', function() {
-                angular.element(window).off('resize', handleResize);
-            });
+          }
+          angular.element(window).on('resize', handleResize);
+          scope.$on('$destroy', function() {
+            angular.element(window).off('resize', handleResize);
+          });
         }
 
         // Deprecation support of "disabled" parameter
@@ -3633,22 +3678,30 @@ angular.module('ui.bootstrap.tabs', [])
         //We need to transclude later, once the content container is ready.
         //when this link happens, we're inside a tab heading.
         scope.$transcludeFn = transclude;
+        scope.$headingTranscludeFn = heading_transclude;
       };
     }
   };
+  function isTabHeading(node) {
+    return node.tagName &&  (
+      node.hasAttribute('tab-heading') ||
+      node.hasAttribute('data-tab-heading') ||
+      node.tagName.toLowerCase() === 'tab-heading' ||
+      node.tagName.toLowerCase() === 'data-tab-heading'
+    );
+  }
 }])
 
 .directive('tabHeadingTransclude', [function() {
   return {
     restrict: 'A',
-    require: '^tab',
-    link: function(scope, elm, attrs, tabCtrl) {
-      scope.$watch('headingElement', function updateHeadingElement(heading) {
-        if (heading) {
-          elm.html('');
-          elm.append(heading);
-        }
-      });
+    link: function(scope, elm, attrs) {
+      if (scope.$headingTranscludeFn) {
+        elm.empty();
+        scope.$headingTranscludeFn(scope.$parent, function(clone) {
+          elm.append(clone);
+        });
+      }
     }
   };
 }])
@@ -3662,37 +3715,20 @@ angular.module('ui.bootstrap.tabs', [])
 
       //Now our tab is ready to be transcluded: both the tab heading area
       //and the tab content area are loaded.  Transclude 'em both.
-      // XXX optionally create inherited child scope only when use-ng-if is specced
       var childScope;
       if (controller.usesNgIf) {
         childScope = tab.$parent.$new();
         scope.$on('$destroy', function() {
-            // XXX: this will bring a huge problem once headingelements are used
             childScope.$destroy();
         });
       } else {
         childScope = tab.$parent;
       }
       tab.$transcludeFn(childScope, function(contents) {
-        angular.forEach(contents, function(node) {
-          if (isTabHeading(node)) {
-            //Let tabHeadingTransclude know.
-            tab.headingElement = node;
-          } else {
-            elm.append(node);
-          }
-        });
+        elm.append(contents);
       });
     }
   };
-  function isTabHeading(node) {
-    return node.tagName &&  (
-      node.hasAttribute('tab-heading') ||
-      node.hasAttribute('data-tab-heading') ||
-      node.tagName.toLowerCase() === 'tab-heading' ||
-      node.tagName.toLowerCase() === 'data-tab-heading'
-    );
-  }
 })
 
 ;
