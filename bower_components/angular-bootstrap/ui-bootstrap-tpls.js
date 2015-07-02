@@ -3596,6 +3596,7 @@ angular.module('ui.bootstrap.tabs', [])
                 if (scope.activated && !scope.active) {
                     scope.$apply(function() {
                         scope.activated = false;
+                        console.log('deact');
                     });
                 }
             }
@@ -3659,7 +3660,9 @@ angular.module('ui.bootstrap.tabs', [])
 
       //Now our tab is ready to be transcluded: both the tab heading area
       //and the tab content area are loaded.  Transclude 'em both.
-      tab.$transcludeFn(tab.$parent, function(contents) {
+      // XXX optionally create inherited child scope only when use-ng-if is specced
+      var childScope = tab.$parent.$new();
+      tab.$transcludeFn(childScope, function(contents) {
         angular.forEach(contents, function(node) {
           if (isTabHeading(node)) {
             //Let tabHeadingTransclude know.
@@ -3668,6 +3671,11 @@ angular.module('ui.bootstrap.tabs', [])
             elm.append(node);
           }
         });
+      });
+
+      scope.$on('$destroy', function() {
+        // XXX: this will bring a huge problem once headingelements are used
+        childScope.$destroy();
       });
     }
   };
