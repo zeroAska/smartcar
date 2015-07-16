@@ -129,6 +129,15 @@ angular.module('sbfModuleVehiclesMap')
     function begin_update_vehicle_status() {
         $log.log('starting update');
         $scope.socket = io.connect(window.location.protocol + '//' + window.location.host + '/test');
+        
+
+        /*  TODO: to request data for one car, please use socket.on to call back
+         *  socket.emit and send a json:
+         *      Note: it is just a psudocode
+         *      socket.emit('get_id_info', {'vehicle_id': car_id});
+         *  then 
+         *      Modify handle_vehicle_update to use vehicle_id
+         */
         $scope.socket.on('vehicle_update', handle_vehicle_update);
 
         $scope.$on('$destroy', function() {

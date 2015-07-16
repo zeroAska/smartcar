@@ -7,6 +7,7 @@ from flask import Flask, render_template, session, request, send_from_directory
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, disconnect
 import io
+import random
 
 app = Flask(__name__)
 app.debug = True
@@ -14,7 +15,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 thread = None
 
-
+'''
 def background_thread():
     """Send server generated events to clients."""
     count = 0
@@ -35,8 +36,8 @@ def background_thread():
                 ],
             'count': count
             })
-        socketio.emit('vehicle_update',msg,namespace='/test')
-
+        emit('vehicle_update',msg)
+'''
 
 @app.route('/')
 def index():
@@ -54,6 +55,39 @@ def send_dist(path):
 def send_bower(path):
     return send_from_directory('bower_components', path)
 
+@socketio.on('get_id_info')
+def send_id_info(msg):
+    vehicle_id = msg['vehicle_id']
+    #print "vehicle_id is " + vehicle_id
+    count = random.uniform(10,100)
+    msg = {
+        'type': 'vehicle_status',
+        'data': {   
+            'vehicle_id': vehicle_id,
+            'latitude': 31.0268809 + count,
+            'longitude': 121.4367119 - count,
+            'SOC': count*0.01,
+            'SOH': 1 - count*0.01,
+            } 
+        }
+
+    emit('vehicle_update',json.dumps(msg))
+
+
+@socketio.on('my event')
+def test_message(message):
+    #session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('my response',
+         #{'data': message['data'], 'count': session['receive_count']})
+         {'data': message['data']})
+
+
+@socketio.on('connect')
+def test_connect():
+    print 'Client connected'
+
+
+'''
 @socketio.on('my broadcast event', namespace='/test')
 def test_broadcast_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
@@ -61,16 +95,12 @@ def test_broadcast_message(message):
          {'data': message['data'], 'count': session['receive_count']},
          broadcast=True)
 
-@socketio.on('connect', namespace='/test')
-def test_connect():
-    print 'Client connected'
-
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
     print('Client disconnected')
-
+'''
 if __name__ == '__main__':
     #socketio.run(app)
-    thread = Thread(target=background_thread)
-    thread.start()
+    #thread = Thread(target=background_thread)
+    #thread.start()
     socketio.run(app, host='0.0.0.0')
