@@ -11,6 +11,7 @@ from sys import stdin
 lock = threading.Lock()
 count = 0
 
+###################### FOR DEBUG ##########################
 def make_plot():
     throttle_in = np.arange(0,101)
     speed_in = np.arange(0,2.0,step = 0.001)
@@ -51,6 +52,8 @@ def make_plot():
     plt.tight_layout()
     plt.show()
     stdin.readline()
+############################################################
+
 
 def evalfis(input_throttle, input_speed):
     if input_throttle >= 100:
