@@ -1,59 +1,68 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Flask-SocketIO Test</title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-            //namespace = '/test'; // change to an empty string to use the global namespace
-
-            // the socket.io documentation recommends sending an explicit package upon connection
-            // this is specially important when using the global namespace
-            var socket = io.connect('http://' + document.domain + ':' + location.port);
-            socket.on('connect', function() {
-		        socket.emit('connect');
-                //socket.emit('my event', {data: 'I\'m connected!'});
-            });
-
-            // event handler for server sent data
-            // the data is displayed in the "Received" section of the page
-		    // msg.count correspond to the json data in emit()
-            socket.on('vehicle_update', function(msg) {
-		        $('#log').append('<br>vehicle update: id is ' + (msg));
-            //msg.vehicles.vihicle_id + ', soc is '+msg.vehicles.SOC);
-            });
-
-            // handlers for the different forms in the page
-            // these send data to the server in a variety of ways
-            $('form#emit').submit(function(event) {
-                socket.emit('get_id_info', {vehicle_id: $('#emit_data').val()});
-                return false;
-            });
-            //$('form#broadcast').submit(function(event) {
-            //    socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
-            //    return false;
-            //});
-
-        });
-    </script>
-</head>
-<body>
-    <h1>Flask-SocketIO Test</h1>
-    <h2>Send:</h2>
-    <form id="emit" method="POST" action='#'>
-        <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-        <input type="submit" value="Echo">
-    </form>
-    <form id="broadcast" method="POST" action='#'>
-        <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-        <input type="submit" value="Broadcast">
-    </form>
-
-    <form id="connect" method="POST" action="#">
-        <input type="submit" value="Connect">
-    </form>
-    <h2>Receive:</h2>
-    <div id="log"></div>
-</body>
+<!DOCTYPE html>
+<html lang="en" ng-app="sbfModuleIndex">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title ng-bind="page_title || 'Smart Battery'"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- build:css css/plugins.min.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='angular-chart.js/dist/angular-chart.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.css') }}" type="text/css">
+    <!-- endbuild -->
+    <!-- process:[href] css/ -->
+    <!-- Angular CSP must be loaded independently, otherwise FOUC will still occur -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='angular/angular-csp.css') }}">
+    <!-- /process -->
+    <!-- build:css css/app.min.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.min.css') }}" type="text/css">
+    <!-- endbuild -->
+  </head>
+  <body ng-cloak>
+    <div ng-if="!full_page" class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <div class="navbar-brand">Smart Battery</div>
+              </div>
+              <div>
+                <ul class="nav navbar-nav">
+                  <li><a ui-sref="vehicles_map">All vehicles</a></li>
+                  <li class="active"><a href="javascript: void(0)">Vehicle Details</a></li>
+                </ul>
+              </div>
+              <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                  <div class="navbar-text">&lt;User&gt; &lt;Image&gt;
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div id="main" ui-view></div>
+    <div class="script-block">
+      <!-- build:js js/plugins.min.js -->
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='jquery/dist/jquery.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='angular/angular.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='angular-resource/angular-resource.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='angular-animate/angular-animate.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='lodash/lodash.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='Chart.js/Chart.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='angular-chart.js/dist/angular-chart.js') }}"></script>
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='socket.io-client/dist/socket.io.js') }}"></script>
+      <script language="javascript" src="{{ url_for('static', filename='angular-bootstrap/ui-bootstrap-tpls.js') }}"></script>
+      <script language="javascript" src="{{ url_for('static', filename='angular-ui-router/release/angular-ui-router.js') }}"></script>
+      <!-- endbuild -->
+      <!-- process:[src] js/app.min.js -->
+      <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/app.min.js') }}"></script>
+      <!-- /process -->
+      <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
+      <!-- process:[src] js/markerwithlabel.min.js -->
+      <iau-script language="javascript" type="text/javascript" src="{{ url_for('static', filename='google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js') }}" load="_gmaps_loaded" on-error="gmaps_load_failed=true" loaded="gmaps_loaded_all"></iau-script>
+      <!-- /process -->
+    </div>
+  </body>
 </html>

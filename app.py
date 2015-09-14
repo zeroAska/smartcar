@@ -213,20 +213,20 @@ class Car():
         if len(self.data_time) == 0:
             return np.nan
         if len(self.speed) == 1:
-            last_speed = self.speed[0] 
+            last_speed = self.speed[0] / 30
             last_time_stamp = self.data_time[0]
         else:
-            last_speed = self.speed[-2]
+            last_speed = self.speed[-2] /30
             last_time_stamp = self.data_time[-2]
         if len(self.speed) <= self.fuzzy_input_buf_size:
             start_index = 0
         else:
             start_index = -self.fuzzy_input_buf_size
         # dist is accumulative. Between two checkpoint, the disk gain is avg_speed times total time in seconds
-        self.dist = self.dist + (last_speed + self.speed[-1]) / 2 / 3.6 * ( (self.data_time[-1]-last_time_stamp)*3600*24 )
+        self.dist = self.dist + (last_speed  + self.speed[-1] / 30) / 2 / 3.6 * ( (self.data_time[-1]-last_time_stamp)*3600*24 )
         if self.dist >= self.fuzzy_min_delta_dist:
             throttle_input = max(self.throttle[start_index:-1])
-            speed_input = np.mean(np.array(self.speed[start_index:-1]) )
+            speed_input = np.mean(np.array(self.speed[start_index:-1]) ) / 30
             # use fuzzy logic to determine the current driving behavior
             fis_out = evalfis(throttle_input,speed_input)
         else:
@@ -238,7 +238,7 @@ def main_loop():
     car1 = Car(1,DATA_SOURCE)
     cars[1] = (car1)
     while True:
-        print "# of current cars is "+ str(len(cars))
+        #print "# of current cars is "+ str(len(cars))
         for key in cars:
             
             if (datetime.now() - cars[key].last_access_time ).total_seconds() > cars[key].max_no_access_time:
