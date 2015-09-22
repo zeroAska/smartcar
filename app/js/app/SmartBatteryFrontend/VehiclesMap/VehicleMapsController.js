@@ -15,7 +15,9 @@ angular.module('sbfModuleVehiclesMap')
         origin: {x: 0, y: 0},
         anchor: {x: 48/2, y: 48/2}
     },
-    gmaps_load_timeout: 10000
+    gmaps_load_timeout: 10000,
+    update_interval: 1000,
+    detail_interval: 2000,
 })
 .factory('sbfVMC$Tools', function($log, $compile, $templateCache, $http) {
     return {
@@ -85,6 +87,7 @@ angular.module('sbfModuleVehiclesMap')
     $scope.map_options = {center: dummy_vehc, zoom: 2 }; // 15 };
     $scope.map_marker_dict = {};
     $scope.vehicles = {};
+    $scope.vehicle_extra_data = {};
     $scope.marker_data = {};
     $scope.ready = false;
     $scope.progress_breaks = sbfVMC$Options.progress_breaks;
@@ -109,12 +112,8 @@ angular.module('sbfModuleVehiclesMap')
                     charts: {},
                 };
                 new_set.data.title = new_set.title;
-                new_set.charts.labels = ["January", "February", "March", "April", "May", "June", "July"];
-                new_set.charts.series = ['SOC', 'Health'];
-                new_set.charts.data = [
-                    [65, 59, 80, 81, 56, 55, 40],
-                    [28, 48 * Math.random(), 40, 19, 86, 27, 90]
-                ];
+                new_set.charts.labels = _.map(_.range(50, 0, -1), function(n) { return ''; });
+                new_set.charts.series = ['Driving Behavior', 'SOC', 'Speed', 'Throttle'];
                 datadict[veh.vehicle_id] = new_set;
             });
             $scope.vehicles = datadict;
@@ -128,7 +127,45 @@ angular.module('sbfModuleVehiclesMap')
 
     function begin_update_vehicle_status() {
         $log.log('starting update');
-        $scope.socket = io.connect(window.location.protocol + '//' + window.location.host + '/test');
+        $scope.update_interval = $interval(function() {
+            $http.get('/car_num').then(function(result) {
+                var total = result.data.total;
+                return $q.all(_.map(_.range(1, total + 1), function(idx) {
+                    return $http.get('/get_car_basic_info?id=' + idx);
+                }));
+            }).then(function(results) {
+                var result_set = _.map(results, function(response) {
+                    var car_data = response.data;
+                    return {
+                        vehicle_id: car_data.car_id,
+                        latitude: car_data.latitude,
+                        longitude: car_data.longitude,
+                        state_of_charge: car_data.soc / 100,
+                        state_of_health: car_data.soc / 100
+                    };
+                });
+
+                handle_vehicle_update({type: 'vehicle_status', 'vehicles': result_set});
+            });
+        }, sbfVMC$Options.update_interval);
+
+        $scope.detail_interval = $interval(function() {
+            var active_vehicle = $scope.marker_data.active_vehicle;
+            if (active_vehicle != null) {
+                $http.get('/get_car_one_info?id=' + active_vehicle).then(function(response) {
+                    $scope.vehicle_extra_data[active_vehicle] = response.data.entry;
+
+                    $scope.vehicle_extra_data[active_vehicle].charts = {
+                        data: [
+                            _.map(response.data.entry.driving_behavior, function(v) {return v * 100;}),
+                            response.data.entry.soc,
+                            _.map(response.data.entry.speed, function(v) {return v;}),
+                            _.map(response.data.entry.throttle, function(v) {return v;})
+                        ]
+                    };
+                });
+            }
+        }, sbfVMC$Options.detail_interval);
         
 
         /*  TODO: to request data for one car, please use socket.on to call back
@@ -138,11 +175,9 @@ angular.module('sbfModuleVehiclesMap')
          *  then 
          *      Modify handle_vehicle_update to use vehicle_id
          */
-        $scope.socket.on('vehicle_update', handle_vehicle_update);
 
         $scope.$on('$destroy', function() {
-            $scope.socket.disconnect();
-            $scope.socket.removeListener('vehicle_update', handle_vehicle_update);
+            $interval.cancel($scope.update_interval);
         });
     }
 

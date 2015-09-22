@@ -25,16 +25,16 @@ div#maps
             dt SOH
             dd {{ (vehicles[marker_data.active_vehicle].data.state_of_health * 100).toFixed(2) }}%
             dt Driving Behavior
-            dd N/A
+            dd {{ vehicle_extra_data[marker_data.active_vehicle].last_driving_behavior.toFixed(4) }}
             dt Coords
             dd {{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}
           div
-            a.btn.btn-primary.btn-sm(ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })") View Details
+            a.btn.btn-primary.btn-sm(ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })", style="display: none;") View Details
 
   div.ani-fade#vehicle-graphs(ng-if="marker_data.active_vehicle != null")
     div.vehicle-graph
       div
-        canvas.lines.chart.chart-line(data="vehicles[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: false}")
+        canvas.lines.chart.chart-line(data="vehicle_extra_data[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: true}")
 
   div#not-ready.ani-fade(ng-if="!gmaps")
     div.text(ng-if="!gmaps_load_failed")

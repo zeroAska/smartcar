@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import sys
 import time,signal
 import os
+import math
 
 def signal_handler(signal, frame):
     print 'You pressed Ctrl+C!'
@@ -163,7 +164,7 @@ class Car():
         # tmp use
 
         # some constants
-        self.data_max_length = 100
+        self.data_max_length = 2000
         self.max_no_access_time = 600
         self.fuzzy_input_buf_size = 50
         self.fuzzy_min_delta_dist = 50
@@ -276,7 +277,7 @@ def index():
 @app.route('/car_num',methods = ['GET'])
 def get_car_num():
     num = len(cars)
-    return str(num)
+    return jsonify(total=num)
 
 # NOte: slow, because we need to look up the list for multiple times
 @app.route('/get_car_basic_info',methods = ['GET'])
@@ -295,30 +296,47 @@ def get_car_basic_info():
     
 @app.route('/get_car_one_info',methods = ['GET'])
 def get_car_one_info():
-    if len(request.args) is not 3:
-        print "get_car_one_info: the num of args should not be "+str(request.args)
-        return None
-    car_id = int(request.args.get('id'))
-    entry = request.args.get('entry')
-    num = int(request.args.get('num'))
+    car_id = int(request.args['id'])
     print type(car_id)
     if car_id in cars:
         car = cars[car_id]
-        num = min(len(car.soc),num)
+        time_unit = 0.5
+        bucket_time = 10.0
+        buckets = 50
         val = {
-            'soc': car.soc[-num:-1],
-            'latitude' : car.latitude[-num:-1],
-            'longitude' : car.longitude[-num:-1],
-            'data_time' : car.data_time[-num:-1],
-            'throttle' : car.throttle[-num:-1],
-            'speed': car.speed[-num:-1], 
-            'driving_behavior': car.driving_behavior[-num:-1]
-        }[entry]
+            'soc': list_bucket_average(car.soc, time_unit, bucket_time, buckets),
+            'latitude' : list_bucket_average(car.latitude, time_unit, bucket_time, buckets),
+            'longitude' : list_bucket_average(car.longitude, time_unit, bucket_time, buckets),
+            'data_time' : list(d * 3600 * 24 for d in list_bucket_average(car.data_time, time_unit, bucket_time, buckets)),
+            'throttle' : list_bucket_average(car.throttle, time_unit, bucket_time, buckets),
+            'speed': list_bucket_average(car.speed, time_unit, bucket_time, buckets),
+            'driving_behavior': list_bucket_average(car.driving_behavior, time_unit, bucket_time, buckets),
+            'last_driving_behavior': car.driving_behavior[-1] if not math.isnan(car.driving_behavior[-1]) else 0,
+        }
         car.set_access_time()
         return jsonify(entry = val)
     else:
         print "No car has id: "+ str(car_id)
         return None
+
+def list_bucket_average(all_data, time_unit, bucket_time, buckets):
+    lst = list(iter_bucket_average(all_data, time_unit, bucket_time, buckets))
+    while len(lst) < buckets:
+        lst.insert(0, 0)
+
+    return lst
+
+def iter_bucket_average(all_data, time_unit, bucket_time, buckets):
+    display_time = bucket_time * buckets
+    bucket_size = int(bucket_time / time_unit)
+    data_set = all_data[-int(display_time / time_unit): -1]
+    for i in range(0, len(data_set), bucket_size):
+        s = data_set[i : i+bucket_size]
+        value = sum(s) / float(len(s))
+        if math.isnan(value):
+            yield 0
+        else:
+            yield value
 
 
 @app.route('/get_driving_behavior',methods = ['GET'])
@@ -333,6 +351,20 @@ def get_driving_behavior():
     else:
         print "No car has id: "+ str(car_id)
         return None
+
+
+@app.route('/app/<path:path>')
+def send_static(path):
+    return send_from_directory('app', path)
+
+@app.route('/dist/<path:path>')
+def send_dist(path):
+    return send_from_directory('dist', path)
+
+@app.route('/bower_components/<path:path>')
+def send_bower(path):
+    return send_from_directory('bower_components', path)
+
 
 if __name__ == '__main__':
     #socketio.run(app)
