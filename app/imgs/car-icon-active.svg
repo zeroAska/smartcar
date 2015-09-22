@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="12.417778mm"
+   height="12.417778mm"
+   viewBox="0 0 44.000002 44.000002"
+   id="svg4870"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="car-icon-active.svg">
+  <defs
+     id="defs4872" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.959798"
+     inkscape:cx="19.482445"
+     inkscape:cy="44.049992"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:snap-center="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata4875">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(6,-1014.3622)">
+    <circle
+       style="fill:#00ffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4143"
+       cx="16"
+       cy="1036.3622"
+       r="22" />
+    <circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1"
+       id="path5448"
+       cx="16"
+       cy="1036.3622"
+       r="15.5" />
+    <path
+       style="fill:#dc0f5b;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 16.063849,1020.3752 c -6.5019079,-0.2892 -12.5080819,4.2914 -14.8801839,10.1887 -1.50844296,3.5421 -1.57373896,7.6299 -0.20389196,11.2257 2.21082596,6.8581 9.68660486,11.1284 16.71748986,10.514 4.03031,-0.2818 7.765516,-2.4179 10.464627,-5.3526 5.475011,-6.2188 5.110252,-16.8416 -1.208311,-22.3561 -2.981599,-2.6513 -6.879078,-4.2483 -10.88973,-4.2197 z m -3.913296,10.9348 c 1.90571,0.1817 3.993827,-0.4116 5.772297,0.4003 1.314271,0.7173 2.263684,2.0313 3.674873,2.5545 2.473435,0.3263 4.950291,0.6644 7.415262,1.0611 1.083974,0.8661 0.05862,2.7833 -0.488306,3.6826 -1.93636,-0.6769 -1.185323,2.9098 -3.37578,2.4096 -1.550312,0.1559 -2.12325,-1.4418 -2.467692,-2.4432 -4.054949,0.026 -8.125854,0 -12.187588,0.011 0.439693,2.0357 -2.4433559,3.2538 -3.7816639,1.8107 -0.328496,-1.1418 -0.676298,-2.3565 -2.201216,-1.8103 -1.568478,0.4781 -2.310813,-0.6656 -1.945616,-2.0936 -0.740674,-2.5994 2.409589,-2.0795 4.039166,-2.4557 1.998139,0.2749 2.79138,-1.6731 4.1857209,-2.6607 0.380667,-0.3207 0.868481,-0.4608 1.360543,-0.4666 z m -0.13301,0.9016 c -1.226483,0.081 -2.2339549,2.4733 -0.325228,1.9784 0.916335,-0.017 1.835366,0 2.753276,0 0,-0.6581 0,-1.3162 0,-1.9743 -0.809349,0 -1.618698,0 -2.428048,0 z m 3.115371,0 c 0,0.6567 0,1.3135 0,1.9702 1.645328,0 3.290657,0 4.935985,0 -1.211122,-0.7821 -2.248359,-2.2574 -3.866447,-1.9722 -0.356506,0 -0.713062,0.01 -1.069538,0 z"
+       id="path5434"
+       inkscape:connector-curvature="0"
+       transform="translate(6.8233387e-8,-1.6676215e-6)" />
+  </g>
+</svg>

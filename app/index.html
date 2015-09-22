@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sbfModuleIndex">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title ng-bind="page_title || 'Smart Battery'"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- build:css css/plugins.min.css -->
+    <link rel="stylesheet" href="../bower_components/angular-chart.js/dist/angular-chart.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+    <!-- endbuild -->
+    <!-- process:[href] css/ -->
+    <!-- Angular CSP must be loaded independently, otherwise FOUC will still occur -->
+    <link rel="stylesheet" href="../bower_components/angular/angular-csp.css">
+    <!-- /process -->
+    <!-- build:css css/app.min.css -->
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <!-- endbuild -->
+  </head>
+  <body ng-cloak>
+    <div ng-if="!full_page" class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <div class="navbar-brand">Smart Battery</div>
+              </div>
+              <div>
+                <ul class="nav navbar-nav">
+                  <li><a ui-sref="vehicles_map">All vehicles</a></li>
+                  <li class="active"><a href="javascript: void(0)">Vehicle Details</a></li>
+                </ul>
+              </div>
+              <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                  <div class="navbar-text">&lt;User&gt; &lt;Image&gt;
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div id="main" ui-view></div>
+    <div class="script-block">
+      <!-- build:js js/plugins.min.js -->
+      <script language="javascript" type="text/javascript" src="../bower_components/jquery/dist/jquery.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular/angular.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-resource/angular-resource.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/lodash/lodash.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/Chart.js/Chart.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/angular-chart.js/dist/angular-chart.js"></script>
+      <script language="javascript" type="text/javascript" src="../bower_components/socket.io-client/dist/socket.io.js"></script>
+      <script language="javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script language="javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <!-- endbuild -->
+      <!-- process:[src] js/app.min.js -->
+      <script language="javascript" type="text/javascript" src="js/app.js"></script>
+      <!-- /process -->
+      <iau-script loaded="_gmaps_loaded" load-on-ready use-script-tag callback=":callback" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDg2yYaNEzeENjcFqGziKG0CP9p147jpk&libraries=weather,geometry,visualization&v=3.17&callback=:callback" on-error="gmaps_load_failed=true"></iau-script>
+      <!-- process:[src] js/markerwithlabel.min.js -->
+      <iau-script language="javascript" type="text/javascript" src="../bower_components/google-maps-utility-library-v3/markerwithlabel/src/markerwithlabel_packed.js" load="_gmaps_loaded" on-error="gmaps_load_failed=true" loaded="gmaps_loaded_all"></iau-script>
+      <!-- /process -->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="test">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://code.angularjs.org/1.4.0-rc.2/angular.js"></script>
+        <script src="https://code.angularjs.org/1.4.0-rc.2/angular-route.js"></script>
+    
+        <script src="/static/js/test.js"></script>
+        <title>Flask-Triangle - Tutorial</title>
+    </head>
+    <body>
+        <div ng-controller="http_test">
+            <label>Name:</label>
+            <input type="text" ng-model="your_name" placeholder="Enter a name here">
+            <hr>
+            <h1>Name: {{get_your_name()}}</h1>
+            <h1>HTTP response: {{car_result.data}}</h1>
+            <div>{{http_result.data}}</div>
+        </div>
+    </body>
+</html>
