@@ -247,7 +247,7 @@ def main_loop():
         for key in cars:
             if (datetime.now() - cars[key].last_access_time ).total_seconds() > cars[key].max_no_access_time:
                 lock.acquire()
-				car_id = cars[key].car_id
+                car_id = cars[key].car_id
                 cars.pop(key,None)
                 lock.release()
                 print "Due to no response for too long, remove car_id "+str(car_id)
