@@ -34,7 +34,7 @@ div#maps
   div.ani-fade#vehicle-graphs(ng-if="marker_data.active_vehicle != null")
     div.vehicle-graph
       div
-        canvas.lines.chart.chart-line(data="vehicle_extra_data[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: true}")
+        canvas.lines.chart.chart-line(data="vehicle_extra_data[marker_data.active_vehicle].charts.data", labels="vehicles[marker_data.active_vehicle].charts.labels", legend="true", series="vehicles[marker_data.active_vehicle].charts.series", height="185", width="500", options="{scaleLabel: '<%=value%>', scaleBeginAtZero: true, animation: false}")
 
   div#not-ready.ani-fade(ng-if="!gmaps")
     div.text(ng-if="!gmaps_load_failed")

@@ -44,7 +44,7 @@
   <div id="vehicle-graphs" ng-if="marker_data.active_vehicle != null" class="ani-fade">
     <div class="vehicle-graph">
       <div>
-        <canvas data="vehicle_extra_data[marker_data.active_vehicle].charts.data" labels="vehicles[marker_data.active_vehicle].charts.labels" legend="true" series="vehicles[marker_data.active_vehicle].charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true, animation: true}" class="lines chart chart-line"></canvas>
+        <canvas data="vehicle_extra_data[marker_data.active_vehicle].charts.data" labels="vehicles[marker_data.active_vehicle].charts.labels" legend="true" series="vehicles[marker_data.active_vehicle].charts.series" height="185" width="500" options="{scaleLabel: '&lt;%=value%&gt;', scaleBeginAtZero: true, animation: false}" class="lines chart chart-line"></canvas>
       </div>
     </div>
   </div>
