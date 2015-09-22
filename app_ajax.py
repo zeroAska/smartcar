@@ -199,7 +199,7 @@ class Car():
             time_stamp = data_all[i,112 - 1]
             speed = data_all[i,0]
             latitude = data_all[i,113 - 1]
-            longitude = data_all[i,112 - 1]
+            longitude = data_all[i,114 - 1]
             soc = data_all [i,4-1]
             driving_behavior = self.calculate_driving_behavior()
             self.set_basic(soc,latitude,longitude,time_stamp,throttle,speed,driving_behavior)

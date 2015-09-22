@@ -14,7 +14,8 @@
             <input type="text" ng-model="your_name" placeholder="Enter a name here">
             <hr>
             <h1>Name: {{get_your_name()}}</h1>
-            <h1>HTTP response: {{get_car_basic_info()}}</h1>
+            <h1>HTTP response: {{car_result.data}}</h1>
+            <div>{{http_result.data}}</div>
         </div>
     </body>
 </html>

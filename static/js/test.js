@@ -34,4 +34,6 @@ my_app.controller('http_test',['$scope','$http',function($scope,$http){
         return this_scope.car_result;
     };
 
+    $scope.get_car_num();
+    $scope.get_car_basic_info();
 }]);
