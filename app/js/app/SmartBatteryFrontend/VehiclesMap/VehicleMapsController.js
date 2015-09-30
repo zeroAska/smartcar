@@ -113,7 +113,7 @@ angular.module('sbfModuleVehiclesMap')
                 };
                 new_set.data.title = new_set.title;
                 new_set.charts.labels = _.map(_.range(50, 0, -1), function(n) { return ''; });
-                new_set.charts.series = ['Driving Behavior', 'SOC', 'Speed', 'Throttle', ‘Safety: Normal'];
+                new_set.charts.series = ['Driving Behavior', 'SOC', 'Speed', 'Throttle'];
                 datadict[veh.vehicle_id] = new_set;
             });
             $scope.vehicles = datadict;
