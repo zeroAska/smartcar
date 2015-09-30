@@ -1,0 +1,101 @@
+#map-canvas, #vehicle-list {
+}
+
+.script-block {
+    display: none;
+}
+
+.google-map-canvas {
+}
+
+#vehicle-graphs {
+    position: fixed;
+    bottom: 40px;
+    left: 90px;
+}
+
+@media screen and (max-height: 560px) {
+    #vehicle-graphs {
+        top: 0;
+        bottom: auto;
+    }
+}
+
+.vehicle-graph {
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    box-shadow: 1px 1px 10px 1px rgba(30, 30, 30, 0.3);
+    border-radius: 2px;
+}
+
+.vehicle-graph ul.line-legend {
+    margin-bottom: 0;
+}
+
+#not-ready {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(200, 200, 200, 0.5);
+    z-index: 99999;
+}
+
+#not-ready .text {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -20px;
+}
+
+
+.google-map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.ani-fade.ng-enter {
+    transition: 0.3s linear all;
+    opacity: 0;
+}
+
+.ani-fade.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.ani-fade.ng-leave {
+    transition:0.3s linear all;
+    opacity:1;
+}
+.ani-fade.ng-leave.ng-leave-active {
+    opacity:0;
+}
+
+/* Vehicle Details page Battery Icon */
+.battery-progress-icon-vertical {
+    border: solid 2px black;
+    border-radius: 6px;
+    position: relative;
+    margin-top: 4px;
+}
+
+.battery-progress-icon-vertical .battery-tab {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    margin-left: -15px;
+    background-color: black;
+    width: 30px;
+    height: 4px;
+    border-radius: 4px 4px 0 0;
+}

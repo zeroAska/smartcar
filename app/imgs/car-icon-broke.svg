@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="9.0311108mm"
+   height="9.0311108mm"
+   viewBox="0 0 31.999999 31.999999"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="car-icon.svg">
+  <defs
+     id="defs4">
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask4184">
+      <path
+         inkscape:connector-curvature="0"
+         d="m 314.06146,367.86222 c -7.90291,0 -15.55951,2.69426 -21.88188,7.61296 l -45.61245,35.1248 -112.68257,16.06152 c -7.67709,1.22965 -12.6377,8.88612 -10.30448,16.49472 l 11.51678,38.52901 22.48802,0 c -2.24699,21.82495 12.69566,36.17699 31.76205,36.17699 19.06639,0 34.19322,-16.23644 31.76205,-36.17699 l 184.41992,0 c -2.68511,21.76079 13.11129,36.17699 31.76204,36.17699 18.65076,0 34.19121,-16.25252 31.76206,-36.17699 l 45.97617,0 c 4.29016,0 7.97083,-3.6975 7.97082,-8.23196 l 0,-43.57329 c 0,-4.15019 -2.99625,-7.60111 -6.91006,-8.13904 l -78.28376,-11.14096 -31.00435,-31.68969 c -6.77395,-7.07062 -16.03725,-10.89436 -25.82184,-11.04807 l -66.91852,0 z m 32.91373,13.3691 35.97477,0 c 5.34388,0 10.23366,2.83096 13.2443,7.36538 l 8.88004,13.67856 c 2.19699,3.82898 -0.19541,7.55575 -4.30365,8.23192 l -53.79546,0 0,-29.27586 z m -38.70242,0.0619 28.51916,0 0,29.21396 -73.13152,0 32.73192,-25.12896 c 3.38696,-2.61306 7.66556,-4.085 11.88044,-4.085 z M 38,162.86221 l 568,0 0,533 -568,0 z"
+         style="fill:#ffffff"
+         id="path4186" />
+    </mask>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="8"
+     inkscape:cx="-14.281205"
+     inkscape:cy="25.850163"
+     inkscape:document-units="px"
+     inkscape:current-layer="g4192"
+     showgrid="false"
+     inkscape:snap-center="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-228.5,-598.86221)">
+    <g
+       id="g4192"
+       transform="matrix(0.06926407,0,0,0.06926407,223.33983,586.19643)">
+      <path
+         transform="matrix(-1,0,0,1,627.5,-27.5)"
+         style="fill:#db0f5b;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1"
+         d="m 553,441.36221 a 231,231 0 0 1 -231,231 231,231 0 0 1 -231,-231 231,231 0 0 1 231,-231 231,231 0 0 1 231,231 z"
+         id="path4144"
+         mask="url(#mask4184)" />
+    </g>
+  </g>
+</svg>

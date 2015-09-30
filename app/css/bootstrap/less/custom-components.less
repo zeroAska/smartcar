@@ -1,0 +1,28 @@
+//
+// Custom components
+// @author Yichen Zhao
+// --------------------------------------------------
+
+// Vertical progress bar
+.progress.vertical {
+    position: relative;
+
+    .progress-bar {
+        width: 100%;
+        height: 0%;
+        .transition(height .6s ease);
+    }
+
+    .progress-bar.vertical-bottom {
+        position: absolute;
+        bottom: 0;
+    }
+}
+
+// Wrapped Tabs
+// Make sure there is no space between the header and the tab-content
+.nav-tab-wrapped .tab-content>.tab-pane.active {
+    border: 1px solid @nav-tabs-border-color;
+    border-top: none;
+    padding: @panel-body-padding;
+}

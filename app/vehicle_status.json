@@ -1,0 +1,27 @@
+{
+    "type": "vehicle_status",
+    "vehicles": [
+        {
+            "vehicle_id": "1",
+            "latitude": 31.0303835,
+            "longitude": 121.4451675,
+            "state_of_charge": 0.5678,
+            "state_of_health": 0.8975
+        },
+        {
+            "vehicle_id": "2",
+            "latitude": 31.0278277,
+            "longitude": 121.4379148,
+            "state_of_charge": 0.1234,
+            "state_of_health": 0.9870
+        },
+        {
+            "vehicle_id": "3",
+            "latitude": 31.0215527,
+            "longitude": 121.4456182,
+            "state_of_charge": 0.789,
+            "state_of_health": 0.456
+        }
+    ]
+}
+
