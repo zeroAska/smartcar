@@ -28,6 +28,8 @@ div#maps
             dd {{ vehicle_extra_data[marker_data.active_vehicle].last_driving_behavior.toFixed(4) }}
             dt Coords
             dd {{vehicles[marker_data.active_vehicle].latitude | latlngcoords}}, {{vehicles[marker_data.active_vehicle].longitude | latlngcoords}}
+            dt Safety
+            dd Normal
           div
             a.btn.btn-primary.btn-sm(ui-sref="vehicle_details({vehicle_id: marker_data.active_vehicle })", style="display: none;") View Details
 
